@@ -1,10 +1,6 @@
 import { ORDER_BAGS, totalBags } from './state';
 import type { State } from './state';
 
-/** Figma node holding the task-banner spec (and the flow under test). */
-export const TASK_LINK =
-  'https://www.figma.com/design/nJFWl2hhYEmIPkDObhIgqO/branch/GYNvj4HV2hDjpS9biD7XSo/Pelican-3.0-Master?node-id=47684-19698&t=x1R1NucUyWioLDul-11';
-
 export interface Task {
   /** number shown in the banner's list marker */
   n: number;

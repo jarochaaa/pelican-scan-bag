@@ -24,12 +24,6 @@
 .task-banner__detail {
   font: var(--text-subtitle-small);
 }
-.task-banner__detail a {
-  color: inherit;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
 .task-banner__desc {
   font: 400 10px/1.6 var(--font-sans);
   letter-spacing: 0.2px;
