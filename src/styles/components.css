@@ -1,3 +1,40 @@
+/* ---------- Task banner (user-testing instructions) ---------- */
+.task-banner {
+  flex: none;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--cp-spacing-tiny);
+  padding: var(--cp-spacing-small) var(--cp-spacing-2xlarge);
+  padding-top: calc(var(--cp-spacing-small) + env(safe-area-inset-top));
+  background: #ffa200;
+  color: var(--cp-text-color-inverse);
+}
+.task-banner__num {
+  flex: none;
+  min-width: 18px;
+  font: var(--text-subtitle-small);
+}
+.task-banner__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--cp-spacing-tiny);
+}
+.task-banner__detail {
+  font: var(--text-subtitle-small);
+}
+.task-banner__detail a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.task-banner__desc {
+  font: 400 10px/1.6 var(--font-sans);
+  letter-spacing: 0.2px;
+}
+
 /* ---------- Page header (Mobile) ---------- */
 .page-header {
   position: sticky;
@@ -192,7 +229,7 @@
 .alert--floating {
   position: absolute;
   z-index: 30;
-  top: 80px;
+  top: 112px;
   left: var(--cp-spacing-large);
   right: var(--cp-spacing-large);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);

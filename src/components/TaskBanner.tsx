@@ -1,0 +1,17 @@
+import { TASK_LINK } from '../tasks';
+import type { Task } from '../tasks';
+
+/** Orange "Tasks" strip on top of every view (Figma 47684:19698): `[Link] - task`, with a short prompt below. */
+export function TaskBanner({ task }: { task: Task }) {
+  return (
+    <aside className="task-banner" aria-label="Test task">
+      <span className="task-banner__num" aria-hidden>{task.n}.</span>
+      <div className="task-banner__text">
+        <p className="task-banner__detail">
+          <a href={TASK_LINK} target="_blank" rel="noopener noreferrer">Link</a> - {task.detail}
+        </p>
+        <p className="task-banner__desc">{task.description}</p>
+      </div>
+    </aside>
+  );
+}

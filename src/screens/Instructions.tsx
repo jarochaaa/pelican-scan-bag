@@ -28,7 +28,7 @@ export function InstructionsScreen({
 
 export function HelpScreen({ onClose }: { onClose: () => void }) {
   return (
-    <div className="screen screen-enter" style={{ position: 'absolute', inset: 0, zIndex: 15, background: 'var(--cp-base-color-lowest)' }}>
+    <div className="screen screen-enter">
       <div className="screen__scroll">
         <PageHeader title="Help" leading="close" onLeading={onClose} />
         <div className="screen__body">
