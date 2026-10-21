@@ -57,7 +57,7 @@ img {
   position: relative;
   width: 100%;
   height: 100dvh;
-  background: var(--cp-base-color-lowest);
+  background: #ffa200; /* task banner colour; shows behind the view's rounded top corners */
   overflow: hidden;
   overscroll-behavior: none;
   display: flex;
@@ -72,6 +72,18 @@ img {
     border-radius: var(--cp-radius-xlarge);
     border: 1px solid var(--cp-border-color-normal);
   }
+}
+
+/* The gray view under the task banner (Figma 47684:19699): 20px rounded top corners. */
+.app__view {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--cp-base-color-lowest);
+  border-radius: var(--cp-radius-xlarge) var(--cp-radius-xlarge) 0 0;
+  overflow: hidden;
 }
 
 /* ---------- Screen scaffolding ---------- */

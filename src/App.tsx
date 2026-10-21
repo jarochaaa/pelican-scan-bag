@@ -42,35 +42,37 @@ export default function App() {
       <div className="app">
         <TaskBanner task={taskFor(s)} />
 
-        {s.helpOpen && <HelpScreen onClose={() => dispatch({ type: 'help', open: false })} />}
+        <div className="app__view">
+          {s.helpOpen && <HelpScreen onClose={() => dispatch({ type: 'help', open: false })} />}
 
-        {!s.helpOpen && s.screen === 'checkout' && (
-          <Checkout onBack={() => {}} onContinue={() => dispatch({ type: 'go', screen: 'instructions' })} />
-        )}
+          {!s.helpOpen && s.screen === 'checkout' && (
+            <Checkout onBack={() => {}} onContinue={() => dispatch({ type: 'go', screen: 'instructions' })} />
+          )}
 
-        {!s.helpOpen && s.screen === 'instructions' && (
-          <InstructionsScreen onBack={() => dispatch({ type: 'go', screen: 'checkout' })} onInfo={info} onScan={scan} />
-        )}
+          {!s.helpOpen && s.screen === 'instructions' && (
+            <InstructionsScreen onBack={() => dispatch({ type: 'go', screen: 'checkout' })} onInfo={info} onScan={scan} />
+          )}
 
-        {!s.helpOpen && s.screen === 'scan' && (
-          <ScanScreen
-            locations={s.locations}
-            selected={s.selected}
-            lastBag={s.lastBag}
-            onBack={() => dispatch({ type: 'go', screen: 'instructions' })}
-            onInfo={info}
-            onHelp={() => dispatch({ type: 'help', open: true })}
-            onOpenScanner={scan}
-            onSelect={(code) => dispatch({ type: 'selectLocation', code })}
-            onRemoveBag={(code) => dispatch({ type: 'removeBag', code })}
-            onRemoveLocation={(code) => dispatch({ type: 'removeLocation', code })}
-            onFinish={() => dispatch({ type: 'go', screen: 'summary' })}
-          />
-        )}
+          {!s.helpOpen && s.screen === 'scan' && (
+            <ScanScreen
+              locations={s.locations}
+              selected={s.selected}
+              lastBag={s.lastBag}
+              onBack={() => dispatch({ type: 'go', screen: 'instructions' })}
+              onInfo={info}
+              onHelp={() => dispatch({ type: 'help', open: true })}
+              onOpenScanner={scan}
+              onSelect={(code) => dispatch({ type: 'selectLocation', code })}
+              onRemoveBag={(code) => dispatch({ type: 'removeBag', code })}
+              onRemoveLocation={(code) => dispatch({ type: 'removeLocation', code })}
+              onFinish={() => dispatch({ type: 'go', screen: 'summary' })}
+            />
+          )}
 
-        {!s.helpOpen && s.screen === 'summary' && (
-          <SummaryScreen locations={s.locations} onDone={() => dispatch({ type: 'reset', snack: 'Bag data sent to the Rider App' })} />
-        )}
+          {!s.helpOpen && s.screen === 'summary' && (
+            <SummaryScreen locations={s.locations} onDone={() => dispatch({ type: 'reset', snack: 'Bag data sent to the Rider App' })} />
+          )}
+        </div>
 
         {s.alert && (
           <Alert key={s.alert.id} floating variant={s.alert.kind} title={s.alert.title} onClick={() => dispatch({ type: 'dismissAlert' })}>
