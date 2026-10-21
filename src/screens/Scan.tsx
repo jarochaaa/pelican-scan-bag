@@ -25,7 +25,7 @@ export function ScanScreen(p: Props) {
 
   return (
     <div className="screen screen-enter">
-      <div className="screen__scroll">
+      <div className="screen__scroll screen__scroll--fixed">
         <PageHeader onLeading={p.onBack} onInfo={p.onInfo} onHelp={p.onHelp} timer={{ label: '3 min', tone: 'danger' }} />
         <div className="screen__body">
           <h2 className="screen__title">Pack, Scan &amp; Dispatch</h2>
