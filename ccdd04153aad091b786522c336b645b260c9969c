@@ -1,0 +1,21 @@
+src/App.tsx
+  s_d4c0229a7eeaf5::t_d7e11407b80a1c 45-46,48-50,52-54,56-70,72-75
+src/styles/base.css
+  s_d4c0229a7eeaf5::t_de7e10bea331a2 60,77-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "ccdd04153aad091b786522c336b645b260c9969c",
+  "prompts": {},
+  "sessions": {
+    "s_d4c0229a7eeaf5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7e7c5d6f-5adf-44e8-827c-6a250363316a",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Javier Arocha <arocha.grafico@gmail.com>"
+    }
+  }
+}
