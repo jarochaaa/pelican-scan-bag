@@ -1,0 +1,135 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overscroll-behavior: none;
+}
+
+body {
+  background: var(--cp-base-color-backdrop);
+  color: var(--cp-text-color-primary);
+  font: var(--text-body-medium);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: inherit;
+}
+
+p,
+h1,
+h2 {
+  margin: 0;
+}
+
+img {
+  display: block;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cp-action-color-success-primary-hover);
+  outline-offset: 2px;
+}
+
+/* ---------- App frame: fluid on phones, centered device-like column on wider screens ---------- */
+.stage {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  height: 100dvh;
+  padding-top: env(safe-area-inset-top);
+  background: var(--cp-base-color-lowest);
+  overflow: hidden;
+  overscroll-behavior: none;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 520px) {
+  .app {
+    height: min(917px, calc(100dvh - 48px));
+    border-radius: var(--cp-radius-xlarge);
+    border: 1px solid var(--cp-border-color-normal);
+  }
+}
+
+/* ---------- Screen scaffolding ---------- */
+.screen {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.screen__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.screen__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--cp-spacing-small);
+  padding: 0 var(--cp-spacing-large) var(--cp-spacing-large);
+}
+
+.screen__title {
+  font: var(--text-display-xlarge);
+  color: var(--cp-text-color-primary);
+}
+
+.screen__cta {
+  flex: none;
+  padding: var(--cp-spacing-large);
+  padding-bottom: max(var(--cp-spacing-large), env(safe-area-inset-bottom));
+  background: var(--cp-base-color-lowest);
+}
+
+.screen__cta--overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding-top: var(--cp-spacing-2xlarge);
+  background: linear-gradient(to bottom, transparent, var(--cp-base-color-lowest) 55%);
+}
+
+.screen-enter {
+  animation: screen-enter 180ms ease-out;
+}
+
+@keyframes screen-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-enter {
+    animation: none;
+  }
+}

@@ -1,0 +1,80 @@
+/*
+ * Pelican 3.0 · dark mode token values.
+ * Resolved from the Figma variable defs of "Scan Bag V1" (node 46812:20813).
+ * Cape packages are not published on the public registry, so the values the
+ * design uses are mirrored here as CSS custom properties (names follow Cape).
+ */
+:root {
+  color-scheme: dark;
+
+  /* base */
+  --cp-base-color-lowest: #28282a;
+  --cp-base-color-flat: #1e1e20;
+  --cp-base-color-highest: #f4f5f6;
+  --cp-base-color-backdrop: #101011;
+
+  /* border */
+  --cp-border-color-normal: #434347;
+
+  /* text */
+  --cp-text-color-primary: #ffffff;
+  --cp-text-color-secondary: #cecfd4;
+  --cp-text-color-tertiary: rgba(255, 255, 255, 0.56);
+  --cp-text-color-inverse: #141415;
+  --cp-text-color-warning: #ffe285;
+  --cp-text-color-muted: #93949d;
+
+  /* feedback */
+  --cp-feedback-color-danger-high: #ef9381;
+  --cp-feedback-color-danger-low: #601405;
+  --cp-feedback-color-danger-alert: #871c07;
+  --cp-feedback-color-warning-low: #664200;
+  --cp-feedback-color-warning-accent: #ffe285;
+  --cp-feedback-color-success-low: #024420;
+  --cp-feedback-color-success-accent: #6cc695;
+  --cp-action-color-success-primary-hover: #95d5b2;
+  --cp-chart-color-success-medium: #95d5b2;
+
+  /* light chips used on the Summary screen */
+  --cp-chip-success-bg: #e5f5ec;
+  --cp-chip-success-fg: #047538;
+  --cp-chip-warning-bg: #fff8df;
+  --cp-chip-warning-fg: #8f5d00;
+  --cp-chip-danger-bg: #fcebe8;
+  --cp-chip-danger-fg: #bf280a;
+  --cp-chip-branded-bg: #d6f5ec;
+  --cp-chip-branded-fg: #02835c;
+
+  /* product accents */
+  --pelican-scanner: #ff9000;
+
+  /* spacing */
+  --cp-spacing-tiny: 2px;
+  --cp-spacing-xsmall: 4px;
+  --cp-spacing-small: 8px;
+  --cp-spacing-medium: 12px;
+  --cp-spacing-large: 16px;
+  --cp-spacing-2xlarge: 24px;
+
+  /* radius */
+  --cp-radius-medium: 8px;
+  --cp-radius-small: 12px;
+  --cp-radius-large: 16px;
+  --cp-radius-xlarge: 20px;
+  --cp-radius-pill: 200px;
+
+  /* type (Pelican3.0 text styles) */
+  --font-sans: 'Inter', 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-roboto: 'Roboto', system-ui, sans-serif;
+  --text-display-xlarge: 700 30px/1.25 var(--font-sans);
+  --text-display-medium: 700 20px/1.5 var(--font-sans);
+  --text-display-small: 700 16px/1.5 var(--font-sans);
+  --text-display-xsmall: 700 14px/1.5 var(--font-sans);
+  --text-subtitle-xlarge: 600 20px/1.5 var(--font-sans);
+  --text-subtitle-medium: 600 14px/1.5 var(--font-sans);
+  --text-subtitle-small: 600 12px/1.5 var(--font-sans);
+  --text-body-medium: 500 14px/1.5 var(--font-sans);
+  --text-body-small: 500 12px/1.5 var(--font-sans);
+  --text-caption: 700 10px/1.6 var(--font-sans);
+  --text-mobile-subtitle-small: 600 12px/1.5 var(--font-roboto);
+}
