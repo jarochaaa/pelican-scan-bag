@@ -26,8 +26,8 @@ const T = {
   },
   bags: {
     n: 4,
-    detail: 'Scan 2 bags and place them in this location.',
-    description: 'Which bag should you place first? How do you know?',
+    detail: 'There is room for one more bag in this location. Scan the second of your 3 bags and place it here.',
+    description: 'How do you know which bag to place? Tell us what the screen shows you.',
   },
   nextLocation: {
     n: 5,
@@ -64,8 +64,9 @@ export function taskFor(s: State): Task {
     case 'scan': {
       const bags = totalBags(s.locations);
       if (bags >= ORDER_BAGS.length) return T.finish;
-      if (s.locations.length >= 2) return T.nextLocation;
-      return bags > 0 ? T.bags : T.location;
+      // 0 bags: first shelf scanned · 1 bag: room for one more · 2+ bags (or a 2nd shelf): shelf is full
+      if (s.locations.length >= 2 || bags >= 2) return T.nextLocation;
+      return bags === 1 ? T.bags : T.location;
     }
   }
 }
