@@ -16,8 +16,8 @@ const T = {
   },
   instructions: {
     n: 2,
-    detail: 'Read the instructions, then start scanning.',
-    description: 'What are the 3 steps? What would you do if the shelf is full?',
+    detail: 'Scan a location with empty space.',
+    description: 'Use the Scanner button to scan a shelf that has room for your bags.',
   },
   location: {
     n: 3,
