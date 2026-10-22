@@ -7,7 +7,7 @@ export function TaskBanner({ task }: { task: Task }) {
       <span className="task-banner__num" aria-hidden>{task.n}.</span>
       <div className="task-banner__text">
         <p className="task-banner__detail">{task.detail}</p>
-        <p className="task-banner__desc">{task.description}</p>
+        {task.description && <p className="task-banner__desc">{task.description}</p>}
       </div>
     </aside>
   );

@@ -5,7 +5,8 @@ export interface Task {
   /** number shown in the banner's list marker */
   n: number;
   detail: string;
-  description: string;
+  /** optional second line; omit when the task needs no extra prompt */
+  description?: string;
 }
 
 const T = {
@@ -27,7 +28,6 @@ const T = {
   bags: {
     n: 4,
     detail: 'There is room for one more bag in this location. Scan the second of your 3 bags and place it here.',
-    description: 'How do you know which bag to place? Tell us what the screen shows you.',
   },
   nextLocation: {
     n: 5,
