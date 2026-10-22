@@ -6,7 +6,10 @@ export function TaskBanner({ task }: { task: Task }) {
     <aside className="task-banner" aria-label="Test task">
       {task.n && <span className="task-banner__num" aria-hidden>{task.n}.</span>}
       <div className="task-banner__text">
-        <p className="task-banner__detail">{task.detail}</p>
+        <p className="task-banner__detail">
+          {task.title && <strong>{task.title} </strong>}
+          {task.detail}
+        </p>
         {task.description && <p className="task-banner__desc">{task.description}</p>}
       </div>
     </aside>

@@ -4,6 +4,8 @@ import type { State } from './state';
 export interface Task {
   /** number shown in the banner's list marker (omitted on the closing message) */
   n?: number;
+  /** optional bold lead-in before the detail (used to orient the tester after a jump back) */
+  title?: string;
   detail: string;
   /** optional second line; omit when the task needs no extra prompt */
   description?: string;
@@ -55,6 +57,7 @@ const T = {
 const EXTRAS = {
   select: {
     n: 9,
+    title: "Let's go back a bit.",
     detail: 'You want to check the other location. How would you select it?',
     description: 'Show us what you would do.',
   },
