@@ -13,7 +13,7 @@ body,
 }
 
 body {
-  background: var(--cp-base-color-backdrop);
+  background: transparent; /* blend with the browser's own background */
   color: var(--cp-text-color-primary);
   font: var(--text-body-medium);
   -webkit-font-smoothing: antialiased;
@@ -58,6 +58,8 @@ img {
   width: 100%;
   height: 100dvh;
   background: #ffa200; /* task banner colour; shows behind the view's rounded top corners */
+  border-radius: var(--cp-radius-xlarge);
+  color-scheme: dark;
   overflow: hidden;
   overscroll-behavior: none;
   display: flex;
@@ -69,12 +71,11 @@ img {
   .app {
     width: 412px;
     height: min(917px, calc(100dvh - 48px));
-    border-radius: var(--cp-radius-xlarge);
     border: 1px solid var(--cp-border-color-normal);
   }
 }
 
-/* The gray view under the task banner (Figma 47684:19699): 20px rounded top corners. */
+/* The gray view under the task banner (Figma 47684:19699): 42px top corners, 20px bottom corners. */
 .app__view {
   position: relative;
   flex: 1;
@@ -82,7 +83,7 @@ img {
   display: flex;
   flex-direction: column;
   background: var(--cp-base-color-lowest);
-  border-radius: var(--cp-radius-xlarge) var(--cp-radius-xlarge) 0 0;
+  border-radius: 42px 42px var(--cp-radius-xlarge) var(--cp-radius-xlarge);
   overflow: hidden;
 }
 

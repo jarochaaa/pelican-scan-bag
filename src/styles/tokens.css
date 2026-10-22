@@ -5,8 +5,6 @@
  * design uses are mirrored here as CSS custom properties (names follow Cape).
  */
 :root {
-  color-scheme: dark;
-
   /* base */
   --cp-base-color-lowest: #28282a;
   --cp-base-color-flat: #1e1e20;
