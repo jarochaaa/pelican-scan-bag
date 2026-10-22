@@ -14,7 +14,7 @@ export function InstructionsScreen({
 }) {
   return (
     <div className="screen screen-enter">
-      <div className="screen__scroll">
+      <div className="screen__scroll screen__scroll--fixed">
         <PageHeader onLeading={onBack} onInfo={onInfo} timer={{ label: '3 min', tone: 'danger' }} />
         <div className="screen__body">
           <h2 className="screen__title">Pack, Scan &amp; Dispatch</h2>
@@ -29,7 +29,7 @@ export function InstructionsScreen({
 export function HelpScreen({ onClose }: { onClose: () => void }) {
   return (
     <div className="screen screen-enter">
-      <div className="screen__scroll">
+      <div className="screen__scroll screen__scroll--fixed">
         <PageHeader title="Help" leading="close" onLeading={onClose} />
         <div className="screen__body">
           <h2 className="screen__title">Pack, Scan &amp; Dispatch</h2>

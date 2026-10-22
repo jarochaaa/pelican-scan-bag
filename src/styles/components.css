@@ -354,6 +354,9 @@
 /* ---------- Instructions ---------- */
 .instructions-card {
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
   gap: var(--cp-spacing-large);
@@ -362,8 +365,11 @@
   border: 1px solid var(--cp-border-color-normal);
   border-radius: var(--cp-radius-xlarge);
 }
+.instructions-card > * {
+  flex-shrink: 0;
+}
 .illustration {
-  flex: 1;
+  flex: 1 0 auto;
   min-height: 190px;
   display: flex;
   align-items: center;
