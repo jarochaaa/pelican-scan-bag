@@ -1,0 +1,19 @@
+src/styles/base.css
+  s_d4c0229a7eeaf5::t_70f4a4c4b48863 16,61-62,78,86
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "04975b65d122ae19430ad27d3fd6a36729404f0a",
+  "prompts": {},
+  "sessions": {
+    "s_d4c0229a7eeaf5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7e7c5d6f-5adf-44e8-827c-6a250363316a",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Javier Arocha <arocha.grafico@gmail.com>"
+    }
+  }
+}
