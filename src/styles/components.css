@@ -2,8 +2,8 @@
 .task-banner {
   flex: none;
   display: flex;
-  align-items: flex-start;
-  gap: var(--cp-spacing-tiny);
+  align-items: center;
+  gap: var(--cp-spacing-small);
   padding: var(--cp-spacing-small) var(--cp-spacing-2xlarge);
   padding-top: calc(var(--cp-spacing-small) + env(safe-area-inset-top));
   background: #ffa200;
@@ -11,8 +11,8 @@
 }
 .task-banner__num {
   flex: none;
-  min-width: 18px;
-  font: var(--text-subtitle-small);
+  min-width: 28px;
+  font: 600 24px/1.5 var(--font-sans);
 }
 .task-banner__text {
   flex: 1;
