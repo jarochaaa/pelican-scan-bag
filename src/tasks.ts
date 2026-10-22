@@ -31,7 +31,7 @@ const T = {
   },
   nextLocation: {
     n: 5,
-    detail: 'This shelf is full. Move to a new location with your last bag.',
+    detail: 'This shelf is full and 1 bag is still left to scan. Move to a new location with your last bag.',
     description: 'Scan the new shelf, then the remaining bag.',
   },
   help: {
