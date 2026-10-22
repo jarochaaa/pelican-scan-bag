@@ -23,6 +23,8 @@ export interface State {
   alertSeq: number;
   helpOpen: boolean;
   snack: string | null;
+  /** follow-up test tasks that run after step 8 (summary → Done): select another location → delete a location → end */
+  extras: 'select' | 'delete' | 'end' | null;
 }
 
 export const ORDER_ID = '#123';
@@ -44,6 +46,7 @@ export const initialState: State = {
   alertSeq: 0,
   helpOpen: false,
   snack: null,
+  extras: null,
 };
 
 export type Action =
@@ -57,6 +60,7 @@ export type Action =
   | { type: 'dismissAlert' }
   | { type: 'snack'; message: string | null }
   | { type: 'jump'; preset: PresetId }
+  | { type: 'done' }
   | { type: 'reset'; snack?: string };
 
 function raise(state: State, kind: AlertMsg['kind'], title: string, body: string): State {
@@ -110,7 +114,7 @@ export function reducer(state: State, action: Action): State {
     }
 
     case 'selectLocation':
-      return { ...state, selected: action.code, lastBag: null };
+      return { ...state, selected: action.code, lastBag: null, extras: state.extras === 'select' ? 'delete' : state.extras };
 
     case 'removeBag':
       return {
@@ -121,13 +125,15 @@ export function reducer(state: State, action: Action): State {
 
     case 'removeLocation': {
       const locations = state.locations.filter((l) => l.code !== action.code);
-      if (locations.length === 0) return { ...initialState, alertSeq: state.alertSeq, screen: 'instructions' };
+      const extras = state.extras === 'delete' ? 'end' : state.extras;
+      if (locations.length === 0) return { ...initialState, alertSeq: state.alertSeq, screen: 'instructions', extras };
       const removedSelected = state.selected === action.code;
       return {
         ...state,
         locations,
         selected: removedSelected ? locations[0].code : state.selected,
         lastBag: null,
+        extras,
       };
     }
 
@@ -152,6 +158,17 @@ export function reducer(state: State, action: Action): State {
       return { ...state, alert: null };
     case 'snack':
       return { ...state, snack: action.message };
+    case 'done': {
+      // First Done ends step 8 and opens the follow-up tasks on the (still full) scan screen; a later Done restarts.
+      if (state.extras) return { ...initialState, alertSeq: state.alertSeq, snack: 'Bag data sent to the Rider App' };
+      return {
+        ...state,
+        screen: 'scan',
+        extras: state.locations.length >= 2 ? 'select' : 'delete',
+        snack: 'Bag data sent to the Rider App',
+      };
+    }
+
     case 'reset':
       return { ...initialState, alertSeq: state.alertSeq, snack: action.snack ?? null };
     case 'jump':
@@ -174,7 +191,9 @@ export type PresetId =
   | 'summary'
   | 'err-wrong-bag'
   | 'err-no-location'
-  | 'warn-duplicate';
+  | 'warn-duplicate'
+  | 'extras-select'
+  | 'extras-delete';
 
 export const PRESETS: { id: PresetId; label: string; group: string }[] = [
   { id: 'checkout', label: 'Checkout done view', group: 'Entry' },
@@ -190,6 +209,8 @@ export const PRESETS: { id: PresetId; label: string; group: string }[] = [
   { id: 'err-no-location', label: 'Error · Scan a location first', group: 'Alerts' },
   { id: 'warn-duplicate', label: 'Warning · Bag already scanned', group: 'Alerts' },
   { id: 'summary', label: 'Summary + rider handoff', group: 'End' },
+  { id: 'extras-select', label: 'After step 8 · select location', group: 'Follow-up' },
+  { id: 'extras-delete', label: 'After step 8 · delete location', group: 'Follow-up' },
 ];
 
 function applyPreset(prev: State, preset: PresetId): State {
@@ -230,6 +251,10 @@ function applyPreset(prev: State, preset: PresetId): State {
         locations: [{ code: B, bags: ['9988'] }, { code: A, bags: ['1234', '5466'] }],
         selected: B,
       };
+    case 'extras-select':
+      return { ...scan([{ code: B, bags: ['9988'] }, { code: A, bags: ['1234', '5466'] }], B, null), extras: 'select' };
+    case 'extras-delete':
+      return { ...scan([{ code: B, bags: ['9988'] }, { code: A, bags: ['1234', '5466'] }], A, null), extras: 'delete' };
     case 'err-wrong-bag':
       return raise({ ...scan([{ code: A, bags: [] }], A, null) }, 'error', 'Wrong bag', 'This bag belongs to another order');
     case 'err-no-location':

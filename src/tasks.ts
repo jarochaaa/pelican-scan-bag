@@ -2,8 +2,8 @@ import { ORDER_BAGS, totalBags } from './state';
 import type { State } from './state';
 
 export interface Task {
-  /** number shown in the banner's list marker */
-  n: number;
+  /** number shown in the banner's list marker (omitted on the closing message) */
+  n?: number;
   detail: string;
   /** optional second line; omit when the task needs no extra prompt */
   description?: string;
@@ -51,8 +51,27 @@ const T = {
   },
 } satisfies Record<string, Task>;
 
+/** Follow-up tasks that run after step 8 (Summary → Done), back on the full scan screen. */
+const EXTRAS = {
+  select: {
+    n: 9,
+    detail: 'You want to check the other location. How would you select it?',
+    description: 'Show us what you would do.',
+  },
+  delete: {
+    n: 10,
+    detail: 'Now remove one of the locations, even though all the bags are placed. How would you delete it?',
+    description: 'Is sliding something you usually do to delete things? Tell us.',
+  },
+  end: {
+    detail: 'That was the last task. Thank you!',
+    description: 'Tap Finish and then Done to start again.',
+  },
+} satisfies Record<NonNullable<State['extras']>, Task>;
+
 /** The task the tester should be doing on the view they are looking at. */
 export function taskFor(s: State): Task {
+  if (s.extras) return EXTRAS[s.extras];
   if (s.helpOpen) return T.help;
   switch (s.screen) {
     case 'checkout':

@@ -70,7 +70,7 @@ export default function App() {
           )}
 
           {!s.helpOpen && s.screen === 'summary' && (
-            <SummaryScreen locations={s.locations} onDone={() => dispatch({ type: 'reset', snack: 'Bag data sent to the Rider App' })} />
+            <SummaryScreen locations={s.locations} onDone={() => dispatch({ type: 'done' })} />
           )}
         </div>
 
