@@ -1,0 +1,28 @@
+src/styles/components.css
+  s_d4c0229a7eeaf5::t_3abf1589191f27 746-749
+  s_d4c0229a7eeaf5::t_bf3638a5179925 750
+src/App.tsx
+  s_d4c0229a7eeaf5::t_fdd0ed34ea228b 62,70
+src/components/LocationCard.tsx
+  s_d4c0229a7eeaf5::t_fdd0ed34ea228b 6,13,32
+src/state.ts
+  s_d4c0229a7eeaf5::t_fdd0ed34ea228b 64-65,175-185
+src/screens/Summary.tsx
+  s_d4c0229a7eeaf5::t_fdd0ed34ea228b 66-70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "d23e5f92516ebab17e0e37ce78b9814157bde020",
+  "prompts": {},
+  "sessions": {
+    "s_d4c0229a7eeaf5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7e7c5d6f-5adf-44e8-827c-6a250363316a",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Javier Arocha <arocha.grafico@gmail.com>"
+    }
+  }
+}
