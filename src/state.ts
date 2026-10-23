@@ -30,9 +30,8 @@ export interface State {
 export const ORDER_ID = '#123';
 /** The three bags that belong to order #123 (Figma: "Place 3 bags in dispatching area by scanning"). */
 export const ORDER_BAGS = ['5466', '1234', '9988'];
-const AUTO_LOCATIONS = ['001-38-01A', '001-41-01B'];
-/** Bags that fit in a location before the picker moves to the next one (Figma: 2 bags, then a new location). */
-const BAGS_PER_LOCATION = 2;
+/** Shelf locations the simulated scanner "reads", in order. */
+const SCAN_LOCATIONS = ['001-38-01A', '001-41-01B', '001-44-02C', '001-47-02D'];
 
 const LOCATION_RE = /^\d{3}-\d{2}-\d{2}[A-Z]$/;
 const BAG_RE = /^\d{4}$/;
@@ -55,7 +54,8 @@ export type Action =
   | { type: 'selectLocation'; code: string }
   | { type: 'removeBag'; code: string }
   | { type: 'removeLocation'; code: string }
-  | { type: 'autoScan' }
+  | { type: 'scanLocation' }
+  | { type: 'scanBag' }
   | { type: 'help'; open: boolean }
   | { type: 'dismissAlert' }
   | { type: 'snack'; message: string | null }
@@ -137,21 +137,20 @@ export function reducer(state: State, action: Action): State {
       };
     }
 
-    case 'autoScan': {
-      // Simulated scanner: every tap is a successful scan.
-      // First tap scans the shelf location, the following taps scan the next bag of the order.
-      if (state.screen === 'instructions') return reducer(state, { type: 'scan', code: AUTO_LOCATIONS[0] });
-      if (state.screen !== 'scan') return state;
-      const next = ORDER_BAGS.find((b) => !state.locations.some((l) => l.bags.includes(b)));
-      if (!next) return state;
-      // Selected location is full and there is still a bag left: scan the next shelf location first.
-      const current = state.locations.find((l) => l.code === state.selected);
-      const nextLocation = AUTO_LOCATIONS.find((c) => !state.locations.some((l) => l.code === c));
-      if (current && current.bags.length >= BAGS_PER_LOCATION && nextLocation) {
-        return reducer(state, { type: 'scan', code: nextLocation });
-      }
+    case 'scanLocation': {
+      // Simulated successful scan: adds the next shelf as a new, empty, selected location.
+      const next = SCAN_LOCATIONS.find((c) => !state.locations.some((l) => l.code === c));
+      if (!next) return raise(state, 'warning', 'Location already scanned', 'There are no more shelves to scan');
       return reducer(state, { type: 'scan', code: next });
     }
+
+    case 'scanBag': {
+      // Simulated successful scan: adds the next bag of the order to the selected location.
+      const next = ORDER_BAGS.find((b) => !state.locations.some((l) => l.bags.includes(b)));
+      if (!next && state.selected) return raise(state, 'warning', 'Bag already scanned', 'Try scanning another bag');
+      return reducer(state, { type: 'scan', code: next ?? ORDER_BAGS[0] });
+    }
+
     case 'help':
       return { ...state, helpOpen: action.open };
     case 'dismissAlert':

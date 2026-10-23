@@ -1,16 +1,18 @@
 import { InstructionsCard } from '../components/Instructions';
 import { PageHeader } from '../components/PageHeader';
-import { ScannerFab } from '../components/Scanner';
+import { ScannerFabs } from '../components/Scanner';
 
 /** Pack, Scan & Dispatch · Instructions — entry point of the flow, and what the Help screen reopens. */
 export function InstructionsScreen({
   onBack,
   onInfo,
-  onScan,
+  onScanLocation,
+  onScanBag,
 }: {
   onBack: () => void;
   onInfo: () => void;
-  onScan: () => void;
+  onScanLocation: () => void;
+  onScanBag: () => void;
 }) {
   return (
     <div className="screen screen-enter">
@@ -21,7 +23,7 @@ export function InstructionsScreen({
           <InstructionsCard />
         </div>
       </div>
-      <ScannerFab onClick={onScan} />
+      <ScannerFabs onLocation={onScanLocation} onBag={onScanBag} />
     </div>
   );
 }

@@ -453,38 +453,36 @@
 }
 
 /* ---------- Scanner FAB ---------- */
-.scanner-fab {
+.scanner-fabs {
   position: absolute;
   z-index: 10;
   right: 12px;
-  bottom: 152px;
-  width: 40px;
-  height: 119px;
+  bottom: 96px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: var(--cp-spacing-small);
 }
-.scanner-fab__pill {
-  flex: none;
+.scanner-fab {
   display: flex;
   align-items: center;
   gap: var(--cp-spacing-xsmall);
-  padding: var(--cp-spacing-small) var(--cp-spacing-2xlarge);
+  padding: var(--cp-spacing-2xlarge) var(--cp-spacing-small);
   border-radius: 100px;
   background: var(--pelican-scanner);
   color: var(--cp-text-color-inverse);
   font: var(--text-caption);
   letter-spacing: 0.2px;
   white-space: nowrap;
-  transform: rotate(90deg);
+  writing-mode: vertical-rl;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
 }
-.scanner-fab:hover .scanner-fab__pill {
-  filter: brightness(1.08);
+.scanner-fab--location {
+  background: var(--cp-feedback-color-success-accent);
 }
 .scanner-fab img {
   width: 24px;
   height: 24px;
+  transform: rotate(90deg);
 }
 
 /* ---------- Location + bags ---------- */

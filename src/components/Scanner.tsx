@@ -1,12 +1,17 @@
 import { assets } from './icons';
 
-export function ScannerFab({ onClick }: { onClick: () => void }) {
+/** Two stacked scan buttons: green "Scan Location" above orange "Scan Bag". */
+export function ScannerFabs({ onLocation, onBag }: { onLocation: () => void; onBag: () => void }) {
   return (
-    <button type="button" className="scanner-fab" onClick={onClick} aria-label="Scan">
-      <span className="scanner-fab__pill">
+    <div className="scanner-fabs">
+      <button type="button" className="scanner-fab scanner-fab--location" onClick={onLocation}>
         <img src={assets.addPhoto} alt="" />
-        Scanner
-      </span>
-    </button>
+        Scan Location
+      </button>
+      <button type="button" className="scanner-fab" onClick={onBag}>
+        <img src={assets.addPhoto} alt="" />
+        Scan Bag
+      </button>
+    </div>
   );
 }

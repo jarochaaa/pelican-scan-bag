@@ -1,7 +1,7 @@
 import type { Loc } from '../state';
 import { LocationCard } from '../components/LocationCard';
 import { PageHeader } from '../components/PageHeader';
-import { ScannerFab } from '../components/Scanner';
+import { ScannerFabs } from '../components/Scanner';
 import { Button, Indicator } from '../components/ui';
 import { totalBags } from '../state';
 
@@ -12,7 +12,8 @@ interface Props {
   onBack: () => void;
   onInfo: () => void;
   onHelp: () => void;
-  onOpenScanner: () => void;
+  onScanLocation: () => void;
+  onScanBag: () => void;
   onSelect: (code: string) => void;
   onRemoveBag: (code: string) => void;
   onRemoveLocation: (code: string) => void;
@@ -53,7 +54,7 @@ export function ScanScreen(p: Props) {
       <div className="screen__cta">
         <Button disabled={!canFinish} onClick={p.onFinish}>Finish</Button>
       </div>
-      <ScannerFab onClick={p.onOpenScanner} />
+      <ScannerFabs onLocation={p.onScanLocation} onBag={p.onScanBag} />
     </div>
   );
 }

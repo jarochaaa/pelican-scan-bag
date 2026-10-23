@@ -24,7 +24,8 @@ export default function App() {
     return () => clearTimeout(t);
   }, [s.snack]);
 
-  const scan = () => dispatch({ type: 'autoScan' });
+  const scanLocation = () => dispatch({ type: 'scanLocation' });
+  const scanBag = () => dispatch({ type: 'scanBag' });
   const info = () => {}; // Order info is not part of the Scan Bag frames yet.
 
   return (
@@ -50,7 +51,7 @@ export default function App() {
           )}
 
           {!s.helpOpen && s.screen === 'instructions' && (
-            <InstructionsScreen onBack={() => dispatch({ type: 'go', screen: 'checkout' })} onInfo={info} onScan={scan} />
+            <InstructionsScreen onBack={() => dispatch({ type: 'go', screen: 'checkout' })} onInfo={info} onScanLocation={scanLocation} onScanBag={scanBag} />
           )}
 
           {!s.helpOpen && s.screen === 'scan' && (
@@ -61,7 +62,8 @@ export default function App() {
               onBack={() => dispatch({ type: 'go', screen: 'instructions' })}
               onInfo={info}
               onHelp={() => dispatch({ type: 'help', open: true })}
-              onOpenScanner={scan}
+              onScanLocation={scanLocation}
+              onScanBag={scanBag}
               onSelect={(code) => dispatch({ type: 'selectLocation', code })}
               onRemoveBag={(code) => dispatch({ type: 'removeBag', code })}
               onRemoveLocation={(code) => dispatch({ type: 'removeLocation', code })}
