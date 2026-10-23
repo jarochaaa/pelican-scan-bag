@@ -365,21 +365,29 @@
   border: 1px solid var(--cp-border-color-normal);
   border-radius: var(--cp-radius-xlarge);
 }
-.instructions-card > * {
+.instructions-card > :not(.illustration) {
   flex-shrink: 0;
 }
 .illustration {
-  flex: 1 0 auto;
-  min-height: 190px;
+  /* takes whatever height is left above the instructions, so the card doesn't scroll */
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+  container-type: size;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+/* too small to read: drop the drawing instead of showing a speck */
+@container (max-height: 64px) {
+  .illustration__art { display: none; }
+}
 .illustration__art {
   position: relative;
   flex: none;
-  width: 213.435px;
-  height: 215.73px;
+  height: 100%;
+  max-height: 215.73px;
+  aspect-ratio: 213.435 / 215.73;
   overflow: clip;
 }
 .illustration__art img {
@@ -830,4 +838,12 @@
     background: var(--cp-base-color-lowest);
     color: var(--cp-text-color-primary);
   }
+}
+
+/* Short screens: tighten the instructions so they stay fully visible without scrolling. */
+@media (max-height: 760px) {
+  .stepper { padding: var(--cp-spacing-small) var(--cp-spacing-large); }
+  .instructions { padding-top: var(--cp-spacing-medium); }
+  .instructions-card { gap: var(--cp-spacing-small); padding: var(--cp-spacing-medium); }
+  .screen__title { font-size: 26px; }
 }
