@@ -743,6 +743,9 @@
 .list-row > span {
   flex: 1;
 }
+.summary-locations-head {
+  margin-top: var(--cp-spacing-small);
+}
 .summary-loc {
   display: flex;
   flex-direction: column;

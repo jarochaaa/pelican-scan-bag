@@ -3,7 +3,7 @@ import { totalBags, ORDER_ID } from '../state';
 import { ChatEllipsis, ChevronRight, Phone, assets } from '../components/icons';
 import { LocationCard } from '../components/LocationCard';
 import { PageHeader } from '../components/PageHeader';
-import { Button, IconButton, Tag } from '../components/ui';
+import { Button, IconButton, Indicator, Tag } from '../components/ui';
 
 export function SummaryScreen({ locations, onDone }: { locations: Loc[]; onDone: () => void }) {
   const bags = totalBags(locations);
@@ -63,11 +63,12 @@ export function SummaryScreen({ locations, onDone }: { locations: Loc[]; onDone:
             </div>
           </section>
 
-          {locations.map((loc, i) => (
-            <div key={loc.code} className="summary-loc">
-              <p className="section-label">Location {i + 1} of {locations.length}</p>
-              <LocationCard loc={loc} variant="summary" />
-            </div>
+          <div className="panel__head summary-locations-head">
+            <h3 className="section-label" style={{ margin: 0 }}>Locations</h3>
+            <Indicator status="branded">{locations.length}</Indicator>
+          </div>
+          {locations.map((loc) => (
+            <LocationCard key={loc.code} loc={loc} variant="summary" />
           ))}
         </div>
       </div>
