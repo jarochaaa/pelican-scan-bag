@@ -142,7 +142,7 @@ export function reducer(state: State, action: Action): State {
     case 'scanLocation': {
       // An empty location blocks scanning a new one: it must be deleted first.
       if (state.locations.some((l) => l.bags.length === 0)) {
-        return raise(state, 'error', 'Delete the empty location first', 'Delete the empty location before scanning a new one');
+        return raise(state, 'error', 'Location open and empty', 'Add bags or delete it to scan a new location');
       }
       // Simulated successful scan: adds the next shelf as a new, empty, selected location.
       const next = SCAN_LOCATIONS.find((c) => !state.locations.some((l) => l.code === c));
