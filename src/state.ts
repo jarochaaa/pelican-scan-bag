@@ -145,10 +145,19 @@ export function reducer(state: State, action: Action): State {
     }
 
     case 'scanBag': {
-      // Simulated successful scan: adds the next bag of the order to the selected location.
-      const next = ORDER_BAGS.find((b) => !state.locations.some((l) => l.bags.includes(b)));
-      if (!next && state.selected) return raise(state, 'warning', 'Bag already scanned', 'Try scanning another bag');
-      return reducer(state, { type: 'scan', code: next ?? ORDER_BAGS[0] });
+      // Simulated successful scan, no limit: the order's 3 bags first, then generated codes (4001, 4002…).
+      if (state.screen !== 'scan' || !state.selected) {
+        return raise(state, 'error', 'Scan a location first', 'Scan the shelf location before scanning bags');
+      }
+      const scanned = new Set(state.locations.flatMap((l) => l.bags));
+      let code = ORDER_BAGS.find((b) => !scanned.has(b));
+      for (let n = 4001; !code; n++) if (!scanned.has(String(n))) code = String(n);
+      return {
+        ...state,
+        alert: null,
+        lastBag: code,
+        locations: state.locations.map((l) => (l.code === state.selected ? { ...l, bags: [code, ...l.bags] } : l)),
+      };
     }
 
     case 'help':
