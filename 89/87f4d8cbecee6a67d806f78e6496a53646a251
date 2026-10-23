@@ -1,0 +1,22 @@
+src/styles/components.css
+  s_d4c0229a7eeaf5::t_27473dfe1c1c37 374-375,842-848
+  s_d4c0229a7eeaf5::t_7d78ac1a3aa4af 368,372-373,388-390
+  s_d4c0229a7eeaf5::t_98d9deb7dec223 376,381-383
+  s_d4c0229a7eeaf5::t_3e5386bdc378a8 384,849
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "8987f4d8cbecee6a67d806f78e6496a53646a251",
+  "prompts": {},
+  "sessions": {
+    "s_d4c0229a7eeaf5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7e7c5d6f-5adf-44e8-827c-6a250363316a",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Javier Arocha <arocha.grafico@gmail.com>"
+    }
+  }
+}
