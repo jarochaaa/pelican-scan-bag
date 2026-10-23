@@ -59,7 +59,7 @@ export default function App() {
               locations={s.locations}
               selected={s.selected}
               lastBag={s.lastBag}
-              onBack={() => dispatch({ type: 'go', screen: 'instructions' })}
+              onBack={() => dispatch({ type: 'restart' })}
               onInfo={info}
               onHelp={() => dispatch({ type: 'help', open: true })}
               onScanLocation={scanLocation}
@@ -67,7 +67,7 @@ export default function App() {
               onSelect={(code) => dispatch({ type: 'selectLocation', code })}
               onRemoveBag={(code) => dispatch({ type: 'removeBag', code })}
               onRemoveLocation={(code) => dispatch({ type: 'removeLocation', code })}
-              onFinish={() => dispatch({ type: 'go', screen: 'summary' })}
+              onFinish={() => dispatch({ type: 'finish' })}
             />
           )}
 

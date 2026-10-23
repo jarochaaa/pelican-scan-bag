@@ -61,6 +61,8 @@ export type Action =
   | { type: 'snack'; message: string | null }
   | { type: 'jump'; preset: PresetId }
   | { type: 'done' }
+  | { type: 'restart' }
+  | { type: 'finish' }
   | { type: 'reset'; snack?: string };
 
 function raise(state: State, kind: AlertMsg['kind'], title: string, body: string): State {
@@ -170,6 +172,17 @@ export function reducer(state: State, action: Action): State {
       return { ...state, alert: null };
     case 'snack':
       return { ...state, snack: action.message };
+    case 'restart':
+      // Back from scanning: start from a clean sheet (no locations or bags kept).
+      return { ...initialState, alertSeq: state.alertSeq, screen: 'instructions' };
+
+    case 'finish': {
+      if (state.locations.some((l) => l.bags.length === 0)) {
+        return raise(state, 'error', 'A location has no bags', 'Scan bags into it or delete the empty location to continue');
+      }
+      return { ...state, screen: 'summary', alert: null };
+    }
+
     case 'done': {
       // First Done ends step 8 and opens the follow-up tasks on the (still full) scan screen; a later Done restarts.
       if (state.extras) return { ...initialState, alertSeq: state.alertSeq, snack: 'Bag data sent to the Rider App' };

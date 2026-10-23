@@ -48,7 +48,6 @@ export function SummaryScreen({ locations, onDone }: { locations: Loc[]; onDone:
             <IconButton label="View products" icon={<ChevronRight />} className="icon-btn--flat" />
           </div>
 
-          <p className="section-label">Rider Handoff: Order placed in {locations.length} {locations.length === 1 ? 'Location' : 'Locations'}</p>
 
           <section className="surface rider" aria-label="Rider">
             <div className="rider__main">
@@ -64,8 +63,11 @@ export function SummaryScreen({ locations, onDone }: { locations: Loc[]; onDone:
             </div>
           </section>
 
-          {locations.map((loc) => (
-            <LocationCard key={loc.code} loc={loc} variant="summary" />
+          {locations.map((loc, i) => (
+            <div key={loc.code} className="summary-loc">
+              <p className="section-label">Location {i + 1} of {locations.length}</p>
+              <LocationCard loc={loc} variant="summary" />
+            </div>
           ))}
         </div>
       </div>

@@ -41,7 +41,6 @@ export function ScanScreen(p: Props) {
                   key={loc.code}
                   loc={loc}
                   variant={loc.code === p.selected ? 'active' : 'idle'}
-                  lastBag={p.lastBag}
                   onSelect={() => p.onSelect(loc.code)}
                   onRemoveBag={p.onRemoveBag}
                   onRemoveLocation={() => p.onRemoveLocation(loc.code)}

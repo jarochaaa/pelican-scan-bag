@@ -626,11 +626,6 @@
 .bag-row__code {
   font: var(--text-display-small);
 }
-.bag-row__hint {
-  font: var(--text-caption);
-  letter-spacing: 0.2px;
-  color: var(--cp-text-color-warning);
-}
 .bag-row__delete {
   flex: none;
   display: grid;
@@ -747,6 +742,11 @@
 }
 .list-row > span {
   flex: 1;
+}
+.summary-loc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cp-spacing-small);
 }
 .section-label {
   margin-top: var(--cp-spacing-small);

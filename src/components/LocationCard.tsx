@@ -3,15 +3,14 @@ import { assets } from './icons';
 import { SwipeToDelete } from './SwipeToDelete';
 import { Tag, cx } from './ui';
 
-function BagRow({ code, hint, readOnly, onRemove }: { code: string; hint?: boolean; readOnly?: boolean; onRemove?: () => void }) {
+function BagRow({ code, readOnly, onRemove }: { code: string; readOnly?: boolean; onRemove?: () => void }) {
   return (
     <div className="bag-row">
       <div className="bag-row__field">
         <span className="bag-row__label">Bag</span>
         <div className="bag-row__value">
           <span className="bag-row__code">{code}</span>
-          {hint && <span className="bag-row__hint">Please, Place this bag</span>}
-        </div>
+                  </div>
       </div>
       {!readOnly && (
         <button type="button" className="bag-row__delete" aria-label={`Remove bag ${code}`} onClick={onRemove}>
@@ -25,13 +24,12 @@ function BagRow({ code, hint, readOnly, onRemove }: { code: string; hint?: boole
 interface Props {
   loc: Loc;
   variant: 'active' | 'idle' | 'summary';
-  lastBag?: string | null;
   onSelect?: () => void;
   onRemoveBag?: (code: string) => void;
   onRemoveLocation?: () => void;
 }
 
-export function LocationCard({ loc, variant, lastBag, onSelect, onRemoveBag, onRemoveLocation }: Props) {
+export function LocationCard({ loc, variant, onSelect, onRemoveBag, onRemoveLocation }: Props) {
   const active = variant === 'active';
   const summary = variant === 'summary';
   // Locations with bags slide to delete; the selected border then lives on the swipe frame so it stays put.
@@ -59,7 +57,6 @@ export function LocationCard({ loc, variant, lastBag, onSelect, onRemoveBag, onR
     <BagRow
       key={code}
       code={code}
-      hint={active && lastBag === code}
       readOnly={summary}
       onRemove={() => onRemoveBag?.(code)}
     />
