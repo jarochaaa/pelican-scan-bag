@@ -11,6 +11,12 @@ export interface Task {
   description?: string;
 }
 
+/**
+ * Switch for the orange task strip on top of the app. `false`: the app is just the dark view and the
+ * facilitator hints replace the strip. Set to `true` to bring it back (taskFor() below keeps working either way).
+ */
+export const SHOW_TASK_BANNER = false;
+
 const T = {
   checkout: {
     n: 1,

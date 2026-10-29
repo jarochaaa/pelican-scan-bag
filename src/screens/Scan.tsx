@@ -3,6 +3,7 @@ import { LocationCard } from '../components/LocationCard';
 import { PageHeader } from '../components/PageHeader';
 import { ScannerFabs } from '../components/Scanner';
 import { Button, Indicator } from '../components/ui';
+import { useI18n } from '../i18n';
 import { totalBags } from '../state';
 
 interface Props {
@@ -22,17 +23,18 @@ interface Props {
 
 /** Scanning process: locations list, one selected at a time; bags are added to the selected location. */
 export function ScanScreen(p: Props) {
+  const { t } = useI18n();
   const canFinish = totalBags(p.locations) > 0;
 
   return (
     <div className="screen screen-enter">
       <div className="screen__scroll screen__scroll--fixed">
-        <PageHeader onLeading={p.onBack} onInfo={p.onInfo} onHelp={p.onHelp} timer={{ label: '3 min', tone: 'danger' }} />
+        <PageHeader onLeading={p.onBack} onInfo={p.onInfo} onHelp={p.onHelp} timer={{ label: t('minutes', { n: 3 }), tone: 'danger' }} />
         <div className="screen__body">
-          <h2 className="screen__title">Pack, Scan &amp; Dispatch</h2>
+          <h2 className="screen__title">{t('packScan')}</h2>
           <section className="panel" aria-labelledby="locations-title">
             <div className="panel__head">
-              <h3 id="locations-title" className="panel__title" style={{ margin: 0 }}>Locations</h3>
+              <h3 id="locations-title" className="panel__title" style={{ margin: 0 }}>{t('locations')}</h3>
               <Indicator status="branded">{p.locations.length}</Indicator>
             </div>
             <div className="locations">
@@ -51,7 +53,7 @@ export function ScanScreen(p: Props) {
         </div>
       </div>
       <div className="screen__cta">
-        <Button disabled={!canFinish} onClick={p.onFinish}>Finish</Button>
+        <Button disabled={!canFinish} onClick={p.onFinish}>{t('finish')}</Button>
       </div>
       <ScannerFabs onLocation={p.onScanLocation} onBag={p.onScanBag} />
     </div>

@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import type { MouseEvent, PointerEvent, ReactNode } from 'react';
+import { useI18n } from '../i18n';
 import { assets } from './icons';
 import { cx } from './ui';
 
@@ -29,6 +30,9 @@ export function SwipeToDelete({
   /** keep the green "selected" border fixed on the wrapper while the content slides inside it */
   framed?: boolean;
 }) {
+  const { rtl } = useI18n();
+  /** physical direction of the swipe: left in LTR, right in RTL (logical x stays negative while open) */
+  const dir = rtl ? -1 : 1;
   const [x, setXState] = useState(0);
   const xRef = useRef(0);
   const setX = (v: number) => {
@@ -48,7 +52,7 @@ export function SwipeToDelete({
   const onMove = (e: PointerEvent) => {
     const s = start.current;
     if (!s) return;
-    const delta = e.clientX - s.x;
+    const delta = (e.clientX - s.x) * dir;
     if (!moved.current && Math.abs(delta) > DRAG_START) {
       moved.current = true;
       setDragging(true);
@@ -105,7 +109,7 @@ export function SwipeToDelete({
       </button>
       <div
         className={cx('loc-swipe__content', !dragging && 'loc-swipe__content--settle')}
-        style={{ transform: x ? `translateX(${x}px)` : undefined }}
+        style={{ transform: x ? `translateX(${x * dir}px)` : undefined }}
         onPointerDown={onDown}
         onPointerMove={onMove}
         onPointerUp={onUp}

@@ -1,19 +1,21 @@
+import { useI18n } from '../i18n';
 import type { Loc } from '../state';
 import { assets } from './icons';
 import { SwipeToDelete } from './SwipeToDelete';
 import { Tag, cx } from './ui';
 
 function BagRow({ code, readOnly, onRemove }: { code: string; readOnly?: boolean; onRemove?: () => void }) {
+  const { t } = useI18n();
   return (
     <div className="bag-row">
       <div className="bag-row__field">
-        <span className="bag-row__label">Bag</span>
+        <span className="bag-row__label">{t('bag')}</span>
         <div className="bag-row__value">
           <span className="bag-row__code">{code}</span>
-                  </div>
+        </div>
       </div>
       {!readOnly && (
-        <button type="button" className="bag-row__delete" aria-label={`Remove bag ${code}`} onClick={onRemove}>
+        <button type="button" className="bag-row__delete" aria-label={t('removeBag', { code })} onClick={onRemove}>
           <img src={assets.deleteIcon} alt="" />
         </button>
       )}
@@ -30,6 +32,7 @@ interface Props {
 }
 
 export function LocationCard({ loc, variant, onSelect, onRemoveBag, onRemoveLocation }: Props) {
+  const { t } = useI18n();
   const active = variant === 'active';
   const summary = variant === 'summary';
   // Locations with bags slide to delete; the selected border then lives on the swipe frame so it stays put.
@@ -37,16 +40,16 @@ export function LocationCard({ loc, variant, onSelect, onRemoveBag, onRemoveLoca
 
   const stats = (
     <div className="loc__head">
-      {active && <Tag status="success" block>Selected</Tag>}
+      {active && <Tag status="success" block>{t('selected')}</Tag>}
       <div className="loc__stats">
         <div className="loc__stat">
           <img src={assets.locationOn} alt="" />
-          <div className="loc__stat-label">Location</div>
+          <div className="loc__stat-label">{t('location')}</div>
           <div className="loc__stat-value">{loc.code}</div>
         </div>
         <div className="loc__stat">
           <img src={assets.bagTile} alt="" />
-          <div className="loc__stat-label">Bags</div>
+          <div className="loc__stat-label">{t('bags')}</div>
           <div className="loc__stat-value">{loc.bags.length}</div>
         </div>
       </div>
@@ -70,7 +73,7 @@ export function LocationCard({ loc, variant, onSelect, onRemoveBag, onRemoveLoca
           className={cx('loc', 'loc--idle')}
           role="button"
           tabIndex={0}
-          aria-label={`Select location ${loc.code}`}
+          aria-label={t('selectLocationAria', { code: loc.code })}
           onClick={onSelect}
           onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onSelect?.()}
         >
@@ -79,7 +82,7 @@ export function LocationCard({ loc, variant, onSelect, onRemoveBag, onRemoveLoca
         </div>
     );
     return loc.bags.length > 0 ? (
-      <SwipeToDelete label={`Delete location ${loc.code}`} onDelete={() => onRemoveLocation?.()}>
+      <SwipeToDelete label={t('deleteLocationAria', { code: loc.code })} onDelete={() => onRemoveLocation?.()}>
         {idleCard}
       </SwipeToDelete>
     ) : (
@@ -88,18 +91,18 @@ export function LocationCard({ loc, variant, onSelect, onRemoveBag, onRemoveLoca
   }
 
   const card = (
-    <section className={cx('loc', active && !swipeable && 'loc--selected', summary && 'loc--summary')} aria-label={`Location ${loc.code}`}>
+    <section className={cx('loc', active && !swipeable && 'loc--selected', summary && 'loc--summary')} aria-label={t('locationAria', { code: loc.code })}>
       {stats}
       {bagList}
       {active && (
         <p className="scan-cta">
           <img src={assets.bagCta} alt="" />
-          Scan bags to add in this location
+          {t('scanHint')}
         </p>
       )}
       {active && loc.bags.length === 0 && (
         <button type="button" className="delete-loc" onClick={onRemoveLocation}>
-          Delete location
+          {t('deleteLocation')}
         </button>
       )}
     </section>
@@ -108,7 +111,7 @@ export function LocationCard({ loc, variant, onSelect, onRemoveBag, onRemoveLoca
   // Empty locations are deleted with the text button; with bags attached they slide to delete.
   if (!swipeable) return card;
   return (
-    <SwipeToDelete framed={active} label={`Delete location ${loc.code}`} onDelete={() => onRemoveLocation?.()}>
+    <SwipeToDelete framed={active} label={t('deleteLocationAria', { code: loc.code })} onDelete={() => onRemoveLocation?.()}>
       {card}
     </SwipeToDelete>
   );

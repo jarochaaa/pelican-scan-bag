@@ -1,3 +1,5 @@
+import type { Lang } from './i18n';
+
 export type ScreenId = 'checkout' | 'instructions' | 'scan' | 'summary';
 
 export interface Loc {
@@ -6,11 +8,22 @@ export interface Loc {
   bags: string[];
 }
 
+export type AlertKey = 'wrong' | 'noLocation' | 'duplicate' | 'emptyLocation' | 'noBags' | 'noShelves' | 'unknown';
+
+/** Alert copy lives in i18n (`alert.<key>.title` / `.body`); the key also drives the view code. */
+export const ALERT_KIND: Record<AlertKey, 'error' | 'warning'> = {
+  wrong: 'error',
+  noLocation: 'error',
+  duplicate: 'warning',
+  emptyLocation: 'error',
+  noBags: 'error',
+  noShelves: 'warning',
+  unknown: 'error',
+};
+
 export interface AlertMsg {
   id: number;
-  kind: 'error' | 'warning';
-  title: string;
-  body: string;
+  key: AlertKey;
 }
 
 export interface State {
@@ -21,8 +34,11 @@ export interface State {
   lastBag: string | null;
   alert: AlertMsg | null;
   alertSeq: number;
+  /** app language (the navigator, hints and banner stay English) */
+  lang: Lang;
   helpOpen: boolean;
-  snack: string | null;
+  /** transient message after Done (i18n key) */
+  snack: 'sent' | null;
   /** follow-up test tasks that run after step 8 (summary → Done): select another location → delete a location → end */
   extras: 'select' | 'delete' | 'end' | null;
 }
@@ -43,6 +59,7 @@ export const initialState: State = {
   lastBag: null,
   alert: null,
   alertSeq: 0,
+  lang: 'en',
   helpOpen: false,
   snack: null,
   extras: null,
@@ -58,23 +75,24 @@ export type Action =
   | { type: 'scanBag' }
   | { type: 'help'; open: boolean }
   | { type: 'dismissAlert' }
-  | { type: 'snack'; message: string | null }
+  | { type: 'snack'; message: 'sent' | null }
+  | { type: 'setLang'; lang: Lang }
   | { type: 'jump'; preset: PresetId }
   | { type: 'done' }
   | { type: 'restart' }
   | { type: 'finish' }
-  | { type: 'reset'; snack?: string };
+  | { type: 'reset'; snack?: 'sent' };
 
-function raise(state: State, kind: AlertMsg['kind'], title: string, body: string): State {
+function raise(state: State, key: AlertKey): State {
   const alertSeq = state.alertSeq + 1;
-  return { ...state, alertSeq, alert: { id: alertSeq, kind, title, body } };
+  return { ...state, alertSeq, alert: { id: alertSeq, key } };
 }
 
 export function totalBags(locations: Loc[]) {
   return locations.reduce((n, l) => n + l.bags.length, 0);
 }
 
-export function reducer(state: State, action: Action): State {
+function baseReducer(state: State, action: Action): State {
   switch (action.type) {
     case 'go':
       return { ...state, screen: action.screen, alert: null };
@@ -96,13 +114,13 @@ export function reducer(state: State, action: Action): State {
 
       if (BAG_RE.test(code)) {
         if (state.screen !== 'scan' || !state.selected) {
-          return raise(state, 'error', 'Scan a location first', 'Scan the shelf location before scanning bags');
+          return raise(state, 'noLocation');
         }
         if (!ORDER_BAGS.includes(code)) {
-          return raise(state, 'error', 'Wrong bag', 'This bag belongs to another order');
+          return raise(state, 'wrong');
         }
         if (state.locations.some((l) => l.bags.includes(code))) {
-          return raise(state, 'warning', 'Bag already scanned', 'Try scanning another bag');
+          return raise(state, 'duplicate');
         }
         return {
           ...state,
@@ -112,7 +130,7 @@ export function reducer(state: State, action: Action): State {
         };
       }
 
-      return raise(state, 'error', 'Code not recognized', 'Try scanning again');
+      return raise(state, 'unknown');
     }
 
     case 'selectLocation':
@@ -142,18 +160,18 @@ export function reducer(state: State, action: Action): State {
     case 'scanLocation': {
       // An empty location blocks scanning a new one: it must be deleted first.
       if (state.locations.some((l) => l.bags.length === 0)) {
-        return raise(state, 'error', 'Location open and empty', 'Add bags or delete it to scan a new location');
+        return raise(state, 'emptyLocation');
       }
       // Simulated successful scan: adds the next shelf as a new, empty, selected location.
       const next = SCAN_LOCATIONS.find((c) => !state.locations.some((l) => l.code === c));
-      if (!next) return raise(state, 'warning', 'Location already scanned', 'There are no more shelves to scan');
-      return reducer(state, { type: 'scan', code: next });
+      if (!next) return raise(state, 'noShelves');
+      return baseReducer(state, { type: 'scan', code: next });
     }
 
     case 'scanBag': {
       // Simulated successful scan, no limit: the order's 3 bags first, then generated codes (4001, 4002…).
       if (state.screen !== 'scan' || !state.selected) {
-        return raise(state, 'error', 'Scan a location first', 'Scan the shelf location before scanning bags');
+        return raise(state, 'noLocation');
       }
       const scanned = new Set(state.locations.flatMap((l) => l.bags));
       let code = ORDER_BAGS.find((b) => !scanned.has(b));
@@ -178,19 +196,19 @@ export function reducer(state: State, action: Action): State {
 
     case 'finish': {
       if (state.locations.some((l) => l.bags.length === 0)) {
-        return raise(state, 'error', 'A location has no bags', 'Scan bags into it or delete the empty location to continue');
+        return raise(state, 'noBags');
       }
       return { ...state, screen: 'summary', alert: null };
     }
 
     case 'done': {
       // First Done ends step 8 and opens the follow-up tasks on the (still full) scan screen; a later Done restarts.
-      if (state.extras) return { ...initialState, alertSeq: state.alertSeq, snack: 'Bag data sent to the Rider App' };
+      if (state.extras) return { ...initialState, alertSeq: state.alertSeq, snack: 'sent' };
       return {
         ...state,
         screen: 'scan',
         extras: state.locations.length >= 2 ? 'select' : 'delete',
-        snack: 'Bag data sent to the Rider App',
+        snack: 'sent',
       };
     }
 
@@ -198,7 +216,15 @@ export function reducer(state: State, action: Action): State {
       return { ...initialState, alertSeq: state.alertSeq, snack: action.snack ?? null };
     case 'jump':
       return applyPreset(state, action.preset);
+    case 'setLang':
+      return { ...state, lang: action.lang };
   }
+}
+
+/** Language lives outside the flow: switching it never resets anything, and resets/jumps never change it. */
+export function reducer(state: State, action: Action): State {
+  if (action.type === 'setLang') return { ...state, lang: action.lang };
+  return { ...baseReducer(state, action), lang: state.lang };
 }
 
 /* ---------- Presets: jump straight to any state of the flow (used by the desktop navigator) ---------- */
@@ -217,26 +243,56 @@ export type PresetId =
   | 'err-wrong-bag'
   | 'err-no-location'
   | 'warn-duplicate'
+  | 'err-empty-location'
+  | 'err-finish-empty'
+  | 'err-no-shelves'
   | 'extras-select'
-  | 'extras-delete';
+  | 'extras-delete'
+  | 'extras-end';
 
-export const PRESETS: { id: PresetId; label: string; group: string }[] = [
-  { id: 'checkout', label: 'Checkout done view', group: 'Entry' },
-  { id: 'instructions', label: 'Instructions', group: 'Entry' },
-  { id: 'help', label: 'Help (same instructions)', group: 'Entry' },
-  { id: 'bag-required', label: 'Bag required · 0 bags', group: 'Scanning' },
-  { id: 'one-bag', label: '1 bag scanned', group: 'Scanning' },
-  { id: 'two-bags', label: '2 bags scanned', group: 'Scanning' },
-  { id: 'second-location', label: 'New location scanned', group: 'Scanning' },
-  { id: 'reselect-location', label: 'Back to first location', group: 'Scanning' },
-  { id: 'bag-in-new-location', label: 'Bag in new location', group: 'Scanning' },
-  { id: 'err-wrong-bag', label: 'Error · Wrong bag', group: 'Alerts' },
-  { id: 'err-no-location', label: 'Error · Scan a location first', group: 'Alerts' },
-  { id: 'warn-duplicate', label: 'Warning · Bag already scanned', group: 'Alerts' },
-  { id: 'summary', label: 'Summary + rider handoff', group: 'End' },
-  { id: 'extras-select', label: 'After step 8 · select location', group: 'Follow-up' },
-  { id: 'extras-delete', label: 'After step 8 · delete location', group: 'Follow-up' },
+export const PRESETS: { id: PresetId; code: string; label: string; group: string }[] = [
+  { id: 'checkout', code: 'A1', label: 'Checkout done view', group: 'Entry' },
+  { id: 'instructions', code: 'B1', label: 'Instructions', group: 'Entry' },
+  { id: 'help', code: 'B2', label: 'Help (same instructions)', group: 'Entry' },
+  { id: 'bag-required', code: 'C1', label: 'Location scanned · 0 bags', group: 'Scanning' },
+  { id: 'one-bag', code: 'C2', label: '1 bag scanned', group: 'Scanning' },
+  { id: 'two-bags', code: 'C3', label: '2 bags scanned', group: 'Scanning' },
+  { id: 'second-location', code: 'C4', label: 'New location scanned', group: 'Scanning' },
+  { id: 'reselect-location', code: 'C5', label: 'Back to first location', group: 'Scanning' },
+  { id: 'bag-in-new-location', code: 'C6', label: 'Bag in new location', group: 'Scanning' },
+  { id: 'err-wrong-bag', code: 'E1', label: 'Error · Wrong bag', group: 'Alerts' },
+  { id: 'err-no-location', code: 'E2', label: 'Error · Scan a location first', group: 'Alerts' },
+  { id: 'warn-duplicate', code: 'E3', label: 'Warning · Bag already scanned', group: 'Alerts' },
+  { id: 'err-empty-location', code: 'E4', label: 'Error · Location open and empty', group: 'Alerts' },
+  { id: 'err-finish-empty', code: 'E5', label: 'Error · A location has no bags', group: 'Alerts' },
+  { id: 'err-no-shelves', code: 'E6', label: 'Warning · No more shelves', group: 'Alerts' },
+  { id: 'summary', code: 'D1', label: 'Summary + rider handoff', group: 'End' },
+  { id: 'extras-select', code: 'F1', label: 'After step 8 · select location', group: 'Follow-up' },
+  { id: 'extras-delete', code: 'F2', label: 'After step 8 · delete location', group: 'Follow-up' },
+  { id: 'extras-end', code: 'F3', label: 'After step 8 · end of the test', group: 'Follow-up' },
 ];
+
+/** Alert key → view code (alerts sit on top of whichever screen is showing). */
+const ALERT_CODE: Record<AlertKey, string> = { wrong: 'E1', noLocation: 'E2', duplicate: 'E3', emptyLocation: 'E4', noBags: 'E5', noShelves: 'E6', unknown: 'E7' };
+
+/**
+ * View code of the current state, derived (never hard-coded per screen) so it never drops out in free play.
+ * Keep in sync with PRESETS above.
+ */
+export function codeFor(s: State): string {
+  if (s.alert) return ALERT_CODE[s.alert.key];
+  if (s.helpOpen) return 'B2';
+  if (s.screen === 'checkout') return 'A1';
+  if (s.screen === 'instructions') return 'B1';
+  if (s.screen === 'summary') return 'D1';
+  if (s.extras) return s.extras === 'select' ? 'F1' : s.extras === 'delete' ? 'F2' : 'F3';
+  const sel = s.locations.find((l) => l.code === s.selected);
+  const bags = totalBags(s.locations);
+  if (s.locations.length <= 1) return bags === 0 ? 'C1' : bags === 1 ? 'C2' : 'C3';
+  if (sel && sel.bags.length === 0) return 'C4';
+  if (sel && sel.code !== s.locations[0].code) return 'C5';
+  return 'C6';
+}
 
 function applyPreset(prev: State, preset: PresetId): State {
   const base: State = { ...initialState, alertSeq: prev.alertSeq };
@@ -278,13 +334,33 @@ function applyPreset(prev: State, preset: PresetId): State {
       };
     case 'extras-select':
       return { ...scan([{ code: B, bags: ['9988'] }, { code: A, bags: ['1234', '5466'] }], B, null), extras: 'select' };
+    case 'extras-end':
+      return { ...scan([{ code: A, bags: ['1234', '5466'] }], A, null), extras: 'end' };
+    case 'err-empty-location':
+      return raise(scan([{ code: B, bags: [] }, { code: A, bags: ['1234', '5466'] }], B, null), 'emptyLocation');
+    case 'err-finish-empty':
+      return raise(scan([{ code: B, bags: [] }, { code: A, bags: ['1234', '5466'] }], B, null), 'noBags');
+    case 'err-no-shelves':
+      return raise(
+        scan(
+          [
+            { code: '001-47-02D', bags: ['4001'] },
+            { code: '001-44-02C', bags: ['9988'] },
+            { code: B, bags: ['5466'] },
+            { code: A, bags: ['1234'] },
+          ],
+          '001-47-02D',
+          null,
+        ),
+        'noShelves',
+      );
     case 'extras-delete':
       return { ...scan([{ code: B, bags: ['9988'] }, { code: A, bags: ['1234', '5466'] }], A, null), extras: 'delete' };
     case 'err-wrong-bag':
-      return raise({ ...scan([{ code: A, bags: [] }], A, null) }, 'error', 'Wrong bag', 'This bag belongs to another order');
+      return raise(scan([{ code: A, bags: [] }], A, null), 'wrong');
     case 'err-no-location':
-      return raise({ ...base, screen: 'instructions' }, 'error', 'Scan a location first', 'Scan the shelf location before scanning bags');
+      return raise({ ...base, screen: 'instructions' }, 'noLocation');
     case 'warn-duplicate':
-      return raise(scan([{ code: A, bags: ['5466'] }], A, '5466'), 'warning', 'Bag already scanned', 'Try scanning another bag');
+      return raise(scan([{ code: A, bags: ['5466'] }], A, '5466'), 'duplicate');
   }
 }

@@ -1,3 +1,4 @@
+import { useI18n } from '../i18n';
 import { InstructionsCard } from '../components/Instructions';
 import { PageHeader } from '../components/PageHeader';
 import { ScannerFabs } from '../components/Scanner';
@@ -14,12 +15,13 @@ export function InstructionsScreen({
   onScanLocation: () => void;
   onScanBag: () => void;
 }) {
+  const { t } = useI18n();
   return (
     <div className="screen screen-enter">
       <div className="screen__scroll screen__scroll--fixed">
-        <PageHeader onLeading={onBack} onInfo={onInfo} timer={{ label: '3 min', tone: 'danger' }} />
+        <PageHeader onLeading={onBack} onInfo={onInfo} timer={{ label: t('minutes', { n: 3 }), tone: 'danger' }} />
         <div className="screen__body">
-          <h2 className="screen__title">Pack, Scan &amp; Dispatch</h2>
+          <h2 className="screen__title">{t('packScan')}</h2>
           <InstructionsCard />
         </div>
       </div>
@@ -29,12 +31,13 @@ export function InstructionsScreen({
 }
 
 export function HelpScreen({ onClose }: { onClose: () => void }) {
+  const { t } = useI18n();
   return (
     <div className="screen screen-enter">
       <div className="screen__scroll screen__scroll--fixed">
-        <PageHeader title="Help" leading="close" onLeading={onClose} />
+        <PageHeader title={t('help')} leading="close" onLeading={onClose} />
         <div className="screen__body">
-          <h2 className="screen__title">Pack, Scan &amp; Dispatch</h2>
+          <h2 className="screen__title">{t('packScan')}</h2>
           <InstructionsCard />
         </div>
       </div>

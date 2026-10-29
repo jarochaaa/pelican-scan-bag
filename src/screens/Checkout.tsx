@@ -2,6 +2,7 @@ import { useState } from 'react';
 import cola from '../assets/products/coca-cola.png';
 import avocado from '../assets/products/avocado.png';
 import almonds from '../assets/products/almonds.jpg';
+import { useI18n } from '../i18n';
 import { PageHeader } from '../components/PageHeader';
 import { Button, Indicator, Tag } from '../components/ui';
 import type { TagStatus } from '../components/ui';
@@ -26,23 +27,24 @@ const PICKED: Product[] = [
 ];
 
 export function Checkout({ onBack, onContinue }: { onBack: () => void; onContinue: () => void }) {
+  const { t } = useI18n();
   const [tab, setTab] = useState<'to-pick' | 'picked'>('picked');
   const products = tab === 'picked' ? PICKED : [];
 
   return (
     <div className="screen screen-enter">
       <div className="screen__scroll">
-        <PageHeader onLeading={onBack} onInfo={() => {}} timer={{ label: '30 min', tone: 'muted' }} flatButtons />
-        <div className="segmented" role="tablist" aria-label="Products">
+        <PageHeader onLeading={onBack} onInfo={() => {}} timer={{ label: t('minutes', { n: 30 }), tone: 'muted' }} flatButtons />
+        <div className="segmented" role="tablist" aria-label={t('productsTabs')}>
           <button type="button" role="tab" className="segmented__item" aria-selected={tab === 'to-pick'} onClick={() => setTab('to-pick')}>
-            To pick <Indicator status="subtle">0</Indicator>
+            {t('toPick')} <Indicator status="subtle">0</Indicator>
           </button>
           <button type="button" role="tab" className="segmented__item" aria-selected={tab === 'picked'} onClick={() => setTab('picked')}>
-            Picked <Indicator status="neutral">{PICKED.length}</Indicator>
+            {t('picked')} <Indicator status="neutral">{PICKED.length}</Indicator>
           </button>
         </div>
         <div className="screen__body" style={{ paddingTop: 8 }}>
-          {products.length === 0 && <p className="empty-state">Nothing left to pick</p>}
+          {products.length === 0 && <p className="empty-state">{t('nothingToPick')}</p>}
           {products.map((p) => (
             <article key={p.name} className="product-card">
               <div className="product-card__img">
@@ -61,7 +63,7 @@ export function Checkout({ onBack, onContinue }: { onBack: () => void; onContinu
         </div>
       </div>
       <div className="screen__cta">
-        <Button onClick={onContinue}>Continue checkout</Button>
+        <Button onClick={onContinue}>{t('continueCheckout')}</Button>
       </div>
     </div>
   );

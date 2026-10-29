@@ -11,3 +11,6 @@ npm install
 npm run dev
 npm run deploy   # builds and publishes dist/ to the gh-pages branch
 ```
+
+## Desktop board (≥ 1100px)
+Title card (Pelican · Mobile app · User: Pickers · area · live View code), floating collapsible navigator (Use cases / Edge cases / Pelican presets, each row `CODE label`), and a side column (View tag → App language EN/ES/AR → Facilitator hints). Phones and tablets show only the app. The orange task strip is off by default: set `SHOW_TASK_BANNER = true` in `src/tasks.ts` to bring it back.

@@ -1,3 +1,4 @@
+import { useI18n } from '../i18n';
 import type { Loc } from '../state';
 import { totalBags, ORDER_ID } from '../state';
 import { ChatEllipsis, ChevronRight, Phone, assets } from '../components/icons';
@@ -6,6 +7,7 @@ import { PageHeader } from '../components/PageHeader';
 import { Button, IconButton, Indicator, Tag } from '../components/ui';
 
 export function SummaryScreen({ locations, onDone }: { locations: Loc[]; onDone: () => void }) {
+  const { t } = useI18n();
   const bags = totalBags(locations);
 
   return (
@@ -16,16 +18,16 @@ export function SummaryScreen({ locations, onDone }: { locations: Loc[]; onDone:
           <section className="surface hero">
             <img src={assets.trophy} alt="" />
             <div>
-              <h2 className="hero__title">{ORDER_ID} Order Completed</h2>
-              <p className="hero__sub">Your fastest pick today. Nice work!</p>
+              <h2 className="hero__title">{t('orderCompleted', { id: ORDER_ID })}</h2>
+              <p className="hero__sub">{t('fastestPick')}</p>
             </div>
           </section>
 
           <div className="stats">
             {[
-              [4, 'Products'],
-              [locations.length, 'Locations'],
-              [bags, 'Bags'],
+              [4, t('products')],
+              [locations.length, t('locations')],
+              [bags, t('bags')],
             ].map(([value, label]) => (
               <div key={label} className="surface stat">
                 <div className="stat__value">{value}</div>
@@ -35,36 +37,36 @@ export function SummaryScreen({ locations, onDone }: { locations: Loc[]; onDone:
           </div>
 
           <section className="surface status-card">
-            <h3 className="status-card__title" style={{ margin: 0 }}>Product status</h3>
+            <h3 className="status-card__title" style={{ margin: 0 }}>{t('productStatus')}</h3>
             <div className="status-card__tags">
-              <Tag status="chip-success">4 Picked</Tag>
-              <Tag status="chip-warning">2 Partially Picked</Tag>
-              <Tag status="chip-danger">1 Removed</Tag>
+              <Tag status="chip-success">{t('nPicked', { n: 4 })}</Tag>
+              <Tag status="chip-warning">{t('nPartial', { n: 2 })}</Tag>
+              <Tag status="chip-danger">{t('nRemoved', { n: 1 })}</Tag>
             </div>
           </section>
 
           <div className="surface list-row">
-            <span>4 products</span>
-            <IconButton label="View products" icon={<ChevronRight />} className="icon-btn--flat" />
+            <span>{t('nProducts', { n: 4 })}</span>
+            <IconButton label={t('viewProducts')} icon={<ChevronRight />} className="icon-btn--flat" />
           </div>
 
 
-          <section className="surface rider" aria-label="Rider">
+          <section className="surface rider" aria-label={t('rider')}>
             <div className="rider__main">
               <p className="rider__name">
                 <img src={assets.courier} alt="" />
                 Daniel M. - 1234
               </p>
-              <Tag status="chip-branded">Arrives in 2 min</Tag>
+              <Tag status="chip-branded">{t('arrivesIn', { n: 2 })}</Tag>
             </div>
             <div className="rider__actions">
-              <IconButton label="Message rider" icon={<ChatEllipsis />} />
-              <IconButton label="Call rider" icon={<Phone />} />
+              <IconButton label={t('messageRider')} icon={<ChatEllipsis />} />
+              <IconButton label={t('callRider')} icon={<Phone />} />
             </div>
           </section>
 
           <div className="panel__head summary-locations-head">
-            <h3 className="section-label" style={{ margin: 0 }}>Locations</h3>
+            <h3 className="section-label" style={{ margin: 0 }}>{t('locations')}</h3>
             <Indicator status="branded">{locations.length}</Indicator>
           </div>
           {locations.map((loc) => (
@@ -73,7 +75,7 @@ export function SummaryScreen({ locations, onDone }: { locations: Loc[]; onDone:
         </div>
       </div>
       <div className="screen__cta screen__cta--overlay">
-        <Button onClick={onDone}>Done</Button>
+        <Button onClick={onDone}>{t('done')}</Button>
       </div>
     </div>
   );

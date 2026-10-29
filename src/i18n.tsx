@@ -1,0 +1,237 @@
+import { createContext, useContext } from 'react';
+import type { ReactNode } from 'react';
+
+export type Lang = 'en' | 'es' | 'ar';
+export const LANGS: { id: Lang; label: string }[] = [
+  { id: 'en', label: 'English' },
+  { id: 'es', label: 'Español' },
+  { id: 'ar', label: 'العربية' },
+];
+
+const en = {
+  back: 'Back',
+  close: 'Close',
+  help: 'Help',
+  orderInfo: 'Order info',
+  minutes: '{n} min',
+  packScan: 'Pack, Scan & Dispatch',
+  // checkout
+  toPick: 'To pick',
+  picked: 'Picked',
+  productsTabs: 'Products',
+  continueCheckout: 'Continue checkout',
+  nothingToPick: 'Nothing left to pick',
+  // instructions
+  instructions: 'Instructions',
+  illustrationAlt: 'A hand holding a phone and scanning',
+  step1: 'Pack products by type',
+  step1Sub: 'Frozen, Fresh, or Normal',
+  step2: 'Scan the shelf location',
+  step3: 'Scan bags and place them in the scanned location',
+  noSpaceTitle: 'No more space in the same location?',
+  noSpaceBody: 'Scan the new location, gather any leftover bags, scan them and place them',
+  // scanning
+  locations: 'Locations',
+  selected: 'Selected',
+  location: 'Location',
+  bags: 'Bags',
+  bag: 'Bag',
+  scanLocation: 'Scan Location',
+  scanBag: 'Scan Bag',
+  scanHint: 'Scan bags to add in this location',
+  deleteLocation: 'Delete location',
+  finish: 'Finish',
+  removeBag: 'Remove bag {code}',
+  deleteLocationAria: 'Delete location {code}',
+  selectLocationAria: 'Select location {code}',
+  locationAria: 'Location {code}',
+  // summary
+  orderCompleted: '{id} Order Completed',
+  fastestPick: 'Your fastest pick today. Nice work!',
+  products: 'Products',
+  productStatus: 'Product status',
+  nPicked: '{n} Picked',
+  nPartial: '{n} Partially Picked',
+  nRemoved: '{n} Removed',
+  nProducts: '{n} products',
+  viewProducts: 'View products',
+  arrivesIn: 'Arrives in {n} min',
+  messageRider: 'Message rider',
+  callRider: 'Call rider',
+  rider: 'Rider',
+  done: 'Done',
+  sent: 'Bag data sent to the Rider App',
+  // alerts
+  'alert.wrong.title': 'Wrong bag',
+  'alert.wrong.body': 'This bag belongs to another order',
+  'alert.noLocation.title': 'Scan a location first',
+  'alert.noLocation.body': 'Scan the shelf location before scanning bags',
+  'alert.duplicate.title': 'Bag already scanned',
+  'alert.duplicate.body': 'Try scanning another bag',
+  'alert.emptyLocation.title': 'Location open and empty',
+  'alert.emptyLocation.body': 'Add bags or delete it to scan a new location',
+  'alert.noBags.title': 'A location has no bags',
+  'alert.noBags.body': 'Scan bags into it or delete the empty location to continue',
+  'alert.noShelves.title': 'Location already scanned',
+  'alert.noShelves.body': 'There are no more shelves to scan',
+  'alert.unknown.title': 'Code not recognized',
+  'alert.unknown.body': 'Try scanning again',
+};
+
+type Dict = typeof en;
+
+const es: Dict = {
+  back: 'Atrás',
+  close: 'Cerrar',
+  help: 'Ayuda',
+  orderInfo: 'Info del pedido',
+  minutes: '{n} min',
+  packScan: 'Empacar, Escanear y Despachar',
+  toPick: 'Por recoger',
+  picked: 'Recogidos',
+  productsTabs: 'Productos',
+  continueCheckout: 'Continuar checkout',
+  nothingToPick: 'Nada por recoger',
+  instructions: 'Instrucciones',
+  illustrationAlt: 'Una mano sosteniendo un teléfono y escaneando',
+  step1: 'Empaca los productos por tipo',
+  step1Sub: 'Congelado, Fresco o Normal',
+  step2: 'Escanea la ubicación del estante',
+  step3: 'Escanea las bolsas y colócalas en la ubicación escaneada',
+  noSpaceTitle: '¿No hay más espacio en la misma ubicación?',
+  noSpaceBody: 'Escanea la nueva ubicación, reúne las bolsas restantes, escanéalas y colócalas',
+  locations: 'Ubicaciones',
+  selected: 'Seleccionada',
+  location: 'Ubicación',
+  bags: 'Bolsas',
+  bag: 'Bolsa',
+  scanLocation: 'Escanear ubicación',
+  scanBag: 'Escanear bolsa',
+  scanHint: 'Escanea bolsas para añadir a esta ubicación',
+  deleteLocation: 'Eliminar ubicación',
+  finish: 'Finalizar',
+  removeBag: 'Quitar la bolsa {code}',
+  deleteLocationAria: 'Eliminar la ubicación {code}',
+  selectLocationAria: 'Seleccionar la ubicación {code}',
+  locationAria: 'Ubicación {code}',
+  orderCompleted: 'Pedido {id} completado',
+  fastestPick: '¡Tu picking más rápido de hoy. Buen trabajo!',
+  products: 'Productos',
+  productStatus: 'Estado de los productos',
+  nPicked: '{n} recogidos',
+  nPartial: '{n} parciales',
+  nRemoved: '{n} eliminado',
+  nProducts: '{n} productos',
+  viewProducts: 'Ver productos',
+  arrivesIn: 'Llega en {n} min',
+  messageRider: 'Escribir al rider',
+  callRider: 'Llamar al rider',
+  rider: 'Rider',
+  done: 'Listo',
+  sent: 'Datos de las bolsas enviados a la Rider App',
+  'alert.wrong.title': 'Bolsa incorrecta',
+  'alert.wrong.body': 'Esta bolsa es de otro pedido',
+  'alert.noLocation.title': 'Escanea una ubicación primero',
+  'alert.noLocation.body': 'Escanea la ubicación del estante antes de escanear bolsas',
+  'alert.duplicate.title': 'Bolsa ya escaneada',
+  'alert.duplicate.body': 'Prueba con otra bolsa',
+  'alert.emptyLocation.title': 'Ubicación abierta y vacía',
+  'alert.emptyLocation.body': 'Añade bolsas o elimínala para escanear otra ubicación',
+  'alert.noBags.title': 'Una ubicación no tiene bolsas',
+  'alert.noBags.body': 'Escanea bolsas en ella o elimínala para continuar',
+  'alert.noShelves.title': 'Ubicación ya escaneada',
+  'alert.noShelves.body': 'No hay más estantes por escanear',
+  'alert.unknown.title': 'Código no reconocido',
+  'alert.unknown.body': 'Vuelve a escanear',
+};
+
+const ar: Dict = {
+  back: 'رجوع',
+  close: 'إغلاق',
+  help: 'مساعدة',
+  orderInfo: 'معلومات الطلب',
+  minutes: '{n} دقيقة',
+  packScan: 'تعبئة ومسح وتسليم',
+  toPick: 'للتجهيز',
+  picked: 'تم تجهيزها',
+  productsTabs: 'المنتجات',
+  continueCheckout: 'متابعة الدفع',
+  nothingToPick: 'لا شيء للتجهيز',
+  instructions: 'التعليمات',
+  illustrationAlt: 'يد تمسك هاتفًا وتقوم بالمسح',
+  step1: 'عبّئ المنتجات حسب النوع',
+  step1Sub: 'مجمّد أو طازج أو عادي',
+  step2: 'امسح موقع الرف',
+  step3: 'امسح الأكياس وضعها في الموقع الممسوح',
+  noSpaceTitle: 'لا توجد مساحة أخرى في نفس الموقع؟',
+  noSpaceBody: 'امسح الموقع الجديد، واجمع الأكياس المتبقية، وامسحها وضعها',
+  locations: 'المواقع',
+  selected: 'محدد',
+  location: 'الموقع',
+  bags: 'الأكياس',
+  bag: 'كيس',
+  scanLocation: 'مسح الموقع',
+  scanBag: 'مسح الكيس',
+  scanHint: 'امسح الأكياس لإضافتها إلى هذا الموقع',
+  deleteLocation: 'حذف الموقع',
+  finish: 'إنهاء',
+  removeBag: 'إزالة الكيس {code}',
+  deleteLocationAria: 'حذف الموقع {code}',
+  selectLocationAria: 'تحديد الموقع {code}',
+  locationAria: 'الموقع {code}',
+  orderCompleted: 'اكتمل الطلب {id}',
+  fastestPick: 'أسرع تجهيز لك اليوم. عمل رائع!',
+  products: 'المنتجات',
+  productStatus: 'حالة المنتجات',
+  nPicked: '{n} تم تجهيزها',
+  nPartial: '{n} جزئيًا',
+  nRemoved: '{n} تمت إزالته',
+  nProducts: '{n} منتجات',
+  viewProducts: 'عرض المنتجات',
+  arrivesIn: 'يصل خلال {n} دقيقة',
+  messageRider: 'مراسلة المندوب',
+  callRider: 'الاتصال بالمندوب',
+  rider: 'المندوب',
+  done: 'تم',
+  sent: 'تم إرسال بيانات الأكياس إلى تطبيق المندوب',
+  'alert.wrong.title': 'كيس خاطئ',
+  'alert.wrong.body': 'هذا الكيس يخص طلبًا آخر',
+  'alert.noLocation.title': 'امسح موقعًا أولًا',
+  'alert.noLocation.body': 'امسح موقع الرف قبل مسح الأكياس',
+  'alert.duplicate.title': 'تم مسح الكيس مسبقًا',
+  'alert.duplicate.body': 'جرّب مسح كيس آخر',
+  'alert.emptyLocation.title': 'موقع مفتوح وفارغ',
+  'alert.emptyLocation.body': 'أضف أكياسًا أو احذفه لمسح موقع جديد',
+  'alert.noBags.title': 'موقع بلا أكياس',
+  'alert.noBags.body': 'امسح أكياسًا فيه أو احذفه للمتابعة',
+  'alert.noShelves.title': 'تم مسح الموقع مسبقًا',
+  'alert.noShelves.body': 'لا توجد أرفف أخرى للمسح',
+  'alert.unknown.title': 'الرمز غير معروف',
+  'alert.unknown.body': 'حاول المسح مرة أخرى',
+};
+
+const DICTS: Record<Lang, Dict> = { en, es, ar };
+export type Key = keyof Dict;
+
+interface I18n {
+  lang: Lang;
+  rtl: boolean;
+  t: (key: Key, vars?: Record<string, string | number>) => string;
+  /** **bold** and \n markup → React nodes */
+  rich: (key: Key) => ReactNode;
+}
+
+export const makeI18n = (lang: Lang): I18n => {
+  const d = DICTS[lang];
+  const t: I18n['t'] = (key, vars) => Object.entries(vars ?? {}).reduce((s, [k, v]) => s.replace(`{${k}}`, String(v)), d[key]);
+  const rich: I18n['rich'] = (key) =>
+    d[key].split('\n').flatMap((line, i, arr) => [
+      ...line.split('**').map((part, j) => (j % 2 ? <strong key={`${i}-${j}`}>{part}</strong> : part)),
+      ...(i < arr.length - 1 ? [<br key={`br${i}`} />] : []),
+    ]);
+  return { lang, rtl: lang === 'ar', t, rich };
+};
+
+const Ctx = createContext<I18n>(makeI18n('en'));
+export const I18nProvider = Ctx.Provider;
+export const useI18n = () => useContext(Ctx);

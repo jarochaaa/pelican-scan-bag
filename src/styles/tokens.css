@@ -5,6 +5,13 @@
  * design uses are mirrored here as CSS custom properties (names follow Cape).
  */
 :root {
+  /* board / navigator tokens (desktop review tools) */
+  --surface-app: #1e1e20;
+  --border-card: #434347;
+  --text-primary: #ffffff;
+  --text-muted: #a39ea2;
+  --accent-cyan: #7ce3fa;
+  --banner: #ffa200;
   /* base */
   --cp-base-color-lowest: #28282a;
   --cp-base-color-flat: #1e1e20;
@@ -62,7 +69,7 @@
   --cp-radius-pill: 200px;
 
   /* type (Pelican3.0 text styles) */
-  --font-sans: 'Inter', 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Inter', 'Inter Variable', 'Noto Sans Arabic', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-roboto: 'Roboto', system-ui, sans-serif;
   --text-display-xlarge: 700 30px/1.25 var(--font-sans);
   --text-display-medium: 700 20px/1.5 var(--font-sans);
