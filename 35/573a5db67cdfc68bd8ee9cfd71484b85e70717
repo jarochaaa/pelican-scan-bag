@@ -1,0 +1,36 @@
+tsconfig.tsbuildinfo
+  s_d4c0229a7eeaf5::t_5f987a2db940f8 1
+src/state.ts
+  s_d4c0229a7eeaf5::t_2fd8f314d876e6 3-18,56,59-60,86-87,92-100,109,128-156,306-309,334-340,363-368,381-386,449-460
+  s_d4c0229a7eeaf5::t_68ecb812465100 401-407
+src/i18n.tsx
+  s_d4c0229a7eeaf5::t_8f0679c05f5c8f 63-81,149-166,231-248
+src/styles/components.css
+  s_d4c0229a7eeaf5::t_83281b08a53726 1137-1382
+src/screens/Dispatch.tsx
+  s_d4c0229a7eeaf5::t_83281b08a53726 1-156
+src/tasks.ts
+  s_d4c0229a7eeaf5::t_8f0679c05f5c8f 92-94
+src/App.tsx
+  s_d4c0229a7eeaf5::t_17e29540979d69 39,41-43
+  s_d4c0229a7eeaf5::t_f62e9400ed3ef9 7,66-68,96-97,108-109,120,122,124,142-144,158,182-183,207-213
+  s_d4c0229a7eeaf5::t_5f987a2db940f8 12,40
+src/components/TesterNotes.tsx
+  s_d4c0229a7eeaf5::t_17e29540979d69 109-133,177,193
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "35573a5db67cdfc68bd8ee9cfd71484b85e70717",
+  "prompts": {},
+  "sessions": {
+    "s_d4c0229a7eeaf5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7e7c5d6f-5adf-44e8-827c-6a250363316a",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Javier Arocha <arocha.grafico@gmail.com>"
+    }
+  }
+}
