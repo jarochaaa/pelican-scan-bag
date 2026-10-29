@@ -1,4 +1,5 @@
 import { useI18n } from '../i18n';
+import { PENDING } from '../state';
 import type { Loc } from '../state';
 import { assets } from './icons';
 import { SwipeToDelete } from './SwipeToDelete';
@@ -34,18 +35,20 @@ interface Props {
 export function LocationCard({ loc, variant, onSelect, onRemoveBag, onRemoveLocation }: Props) {
   const { t } = useI18n();
   const active = variant === 'active';
+  /** bags scanned before any location: yellow frame, no shelf code yet */
+  const pending = loc.code === PENDING;
   const summary = variant === 'summary';
   // Locations with bags slide to delete; the selected border then lives on the swipe frame so it stays put.
   const swipeable = !summary && loc.bags.length > 0;
 
   const stats = (
     <div className="loc__head">
-      {active && <Tag status="success" block>{t('selected')}</Tag>}
+      {pending ? <Tag status="warning" block>{t('pendingTag')}</Tag> : active && <Tag status="success" block>{t('selected')}</Tag>}
       <div className="loc__stats">
         <div className="loc__stat">
           <img src={assets.locationOn} alt="" />
           <div className="loc__stat-label">{t('location')}</div>
-          <div className="loc__stat-value">{loc.code}</div>
+          <div className="loc__stat-value">{pending ? '-' : loc.code}</div>
         </div>
         <div className="loc__stat">
           <img src={assets.bagTile} alt="" />
@@ -73,7 +76,7 @@ export function LocationCard({ loc, variant, onSelect, onRemoveBag, onRemoveLoca
           className={cx('loc', 'loc--idle')}
           role="button"
           tabIndex={0}
-          aria-label={t('selectLocationAria', { code: loc.code })}
+          aria-label={t('selectLocationAria', { code: pending ? '-' : loc.code })}
           onClick={onSelect}
           onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onSelect?.()}
         >
@@ -95,8 +98,8 @@ export function LocationCard({ loc, variant, onSelect, onRemoveBag, onRemoveLoca
       {stats}
       {bagList}
       {active && (
-        <p className="scan-cta">
-          <img src={assets.bagCta} alt="" />
+        <p className={cx('scan-cta', pending && 'scan-cta--pending')}>
+          {!pending && <img src={assets.bagCta} alt="" />}
           {t('scanHint')}
         </p>
       )}
@@ -111,7 +114,7 @@ export function LocationCard({ loc, variant, onSelect, onRemoveBag, onRemoveLoca
   // Empty locations are deleted with the text button; with bags attached they slide to delete.
   if (!swipeable) return card;
   return (
-    <SwipeToDelete framed={active} label={t('deleteLocationAria', { code: loc.code })} onDelete={() => onRemoveLocation?.()}>
+    <SwipeToDelete framed={active ? (pending ? 'warning' : 'success') : undefined} label={t('deleteLocationAria', { code: loc.code })} onDelete={() => onRemoveLocation?.()}>
       {card}
     </SwipeToDelete>
   );

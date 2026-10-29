@@ -16,18 +16,19 @@ const AREA = 'Pack, Scan & Dispatch';
 
 /** Use cases: a titled (blue) row, then the views the use case goes through (preset ids from state.ts). */
 const USE_CASES: { title: string; hint: string; steps: PresetId[] }[] = [
-  { title: 'USE CASE 1 · Start scanning', hint: 'Checkout → Instructions → Scan Location', steps: ['checkout', 'instructions', 'bag-required'] },
-  { title: 'USE CASE 2 · Scan bags into a location', hint: 'Scan Bag until the shelf is full', steps: ['one-bag', 'two-bags'] },
-  { title: 'USE CASE 3 · Spread bags across locations', hint: 'Scan Location → Scan Bag → select another', steps: ['second-location', 'bag-in-new-location', 'reselect-location'] },
-  { title: 'USE CASE 4 · Finish and hand off', hint: 'Finish → Summary → Done', steps: ['summary'] },
-  { title: 'USE CASE 5 · Follow-up after the summary', hint: 'Select a location → delete a location', steps: ['extras-select', 'extras-delete', 'extras-end'] },
-  { title: 'USE CASE 6 · Find the instructions again', hint: 'Tap ? in the scanning header', steps: ['help'] },
+  { title: 'USE CASE 1 · Start with a location', hint: 'Checkout → Instructions → Scan Location', steps: ['checkout', 'instructions', 'bag-required'] },
+  { title: 'USE CASE 2 · Start with a bag', hint: 'Scan Bag → Scan Location', steps: ['instructions', 'bag-first', 'one-bag'] },
+  { title: 'USE CASE 3 · Scan bags into a location', hint: 'Scan Bag until the shelf is full', steps: ['one-bag', 'two-bags'] },
+  { title: 'USE CASE 4 · Spread bags across locations', hint: 'Scan Location → Scan Bag → select another', steps: ['second-location', 'bag-in-new-location', 'reselect-location'] },
+  { title: 'USE CASE 5 · Finish and hand off', hint: 'Finish → Summary → Done', steps: ['summary'] },
+  { title: 'USE CASE 6 · Follow-up after the summary', hint: 'Select a location → delete a location', steps: ['extras-select', 'extras-delete', 'extras-end'] },
+  { title: 'USE CASE 7 · Find the instructions again', hint: 'Tap ? in the scanning header', steps: ['help'] },
 ];
 
 /** Edge cases: same shape; the “Edge cases” recipes in the facilitator hints follow the same numbering. */
 const EDGE_CASES: { title: string; hint: string; steps: PresetId[] }[] = [
   { title: 'EDGE CASE 1 · Wrong or duplicate bag', hint: 'Cannot be triggered by tapping', steps: ['err-wrong-bag', 'warn-duplicate'] },
-  { title: 'EDGE CASE 2 · Scan a bag before a location', hint: 'Scan Bag on Instructions', steps: ['err-no-location'] },
+  { title: 'EDGE CASE 2 · Finish before scanning a location', hint: 'Scan Bag → Finish', steps: ['bag-first', 'err-no-location'] },
   { title: 'EDGE CASE 3 · Empty location blocks the flow', hint: 'Scan Location twice · Finish', steps: ['second-location', 'err-empty-location', 'err-finish-empty'] },
   { title: 'EDGE CASE 4 · Delete a bag or a location', hint: 'Bin icon · Delete location · slide', steps: ['bag-required', 'two-bags'] },
   { title: 'EDGE CASE 5 · No more shelves', hint: 'More than 4 locations', steps: ['err-no-shelves'] },

@@ -572,6 +572,9 @@
 .loc-swipe--framed {
   border: 2px solid var(--cp-action-color-success-primary-hover);
 }
+.loc-swipe--warning {
+  border-color: var(--cp-text-color-warning);
+}
 /* red sits behind the whole card so it also fills the card's rounded corners while sliding */
 .loc-swipe--open {
   background: var(--cp-feedback-color-danger-alert);
@@ -654,6 +657,14 @@
   padding: var(--cp-spacing-small) var(--cp-spacing-large);
   font: var(--text-mobile-subtitle-small);
   color: var(--cp-chart-color-success-medium);
+}
+.scan-cta--pending {
+  width: auto;
+  margin: 0 var(--cp-spacing-small);
+  border: 1px dashed var(--cp-border-color-normal);
+  border-radius: var(--cp-radius-xlarge);
+  font-style: italic;
+  color: var(--cp-text-color-warning);
 }
 .scan-cta img {
   width: 24px;

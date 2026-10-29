@@ -46,6 +46,9 @@ export interface State {
 export const ORDER_ID = '#123';
 /** The three bags that belong to order #123 (Figma: "Place 3 bags in dispatching area by scanning"). */
 export const ORDER_BAGS = ['5466', '1234', '9988'];
+/** Code of a location opened by scanning a bag first: it has bags but no shelf yet (Figma 49068:19941). */
+export const PENDING = 'pending';
+
 /** Shelf locations the simulated scanner "reads", in order. */
 const SCAN_LOCATIONS = ['001-38-01A', '001-41-01B', '001-44-02C', '001-47-02D'];
 
@@ -158,24 +161,42 @@ function baseReducer(state: State, action: Action): State {
     }
 
     case 'scanLocation': {
+      const next = SCAN_LOCATIONS.find((c) => !state.locations.some((l) => l.code === c));
+      // Bags scanned first: the shelf scanned now becomes their location (and it gets selected).
+      if (state.locations.some((l) => l.code === PENDING)) {
+        if (!next) return raise(state, 'noShelves');
+        return {
+          ...state,
+          alert: null,
+          selected: next,
+          locations: state.locations.map((l) => (l.code === PENDING ? { ...l, code: next } : l)),
+        };
+      }
       // An empty location blocks scanning a new one: it must be deleted first.
       if (state.locations.some((l) => l.bags.length === 0)) {
         return raise(state, 'emptyLocation');
       }
       // Simulated successful scan: adds the next shelf as a new, empty, selected location.
-      const next = SCAN_LOCATIONS.find((c) => !state.locations.some((l) => l.code === c));
       if (!next) return raise(state, 'noShelves');
       return baseReducer(state, { type: 'scan', code: next });
     }
 
     case 'scanBag': {
       // Simulated successful scan, no limit: the order's 3 bags first, then generated codes (4001, 4002…).
-      if (state.screen !== 'scan' || !state.selected) {
-        return raise(state, 'noLocation');
-      }
       const scanned = new Set(state.locations.flatMap((l) => l.bags));
       let code = ORDER_BAGS.find((b) => !scanned.has(b));
       for (let n = 4001; !code; n++) if (!scanned.has(String(n))) code = String(n);
+      // No location selected yet: bag first. Open a location without shelf that waits for a location scan.
+      if (state.screen !== 'scan' || state.selected === null) {
+        return {
+          ...state,
+          screen: 'scan',
+          alert: null,
+          lastBag: code,
+          selected: PENDING,
+          locations: [{ code: PENDING, bags: [code] }, ...state.locations.filter((l) => l.code !== PENDING)],
+        };
+      }
       return {
         ...state,
         alert: null,
@@ -195,6 +216,7 @@ function baseReducer(state: State, action: Action): State {
       return { ...initialState, alertSeq: state.alertSeq, screen: 'instructions' };
 
     case 'finish': {
+      if (state.locations.some((l) => l.code === PENDING)) return raise(state, 'noLocation');
       if (state.locations.some((l) => l.bags.length === 0)) {
         return raise(state, 'noBags');
       }
@@ -234,6 +256,7 @@ export type PresetId =
   | 'instructions'
   | 'help'
   | 'bag-required'
+  | 'bag-first'
   | 'one-bag'
   | 'two-bags'
   | 'second-location'
@@ -255,13 +278,14 @@ export const PRESETS: { id: PresetId; code: string; label: string; group: string
   { id: 'instructions', code: 'B1', label: 'Instructions', group: 'Entry' },
   { id: 'help', code: 'B2', label: 'Help (same instructions)', group: 'Entry' },
   { id: 'bag-required', code: 'C1', label: 'Location scanned · 0 bags', group: 'Scanning' },
+  { id: 'bag-first', code: 'C7', label: 'Bag scanned first · no location yet', group: 'Scanning' },
   { id: 'one-bag', code: 'C2', label: '1 bag scanned', group: 'Scanning' },
   { id: 'two-bags', code: 'C3', label: '2 bags scanned', group: 'Scanning' },
   { id: 'second-location', code: 'C4', label: 'New location scanned', group: 'Scanning' },
   { id: 'reselect-location', code: 'C5', label: 'Back to first location', group: 'Scanning' },
   { id: 'bag-in-new-location', code: 'C6', label: 'Bag in new location', group: 'Scanning' },
   { id: 'err-wrong-bag', code: 'E1', label: 'Error · Wrong bag', group: 'Alerts' },
-  { id: 'err-no-location', code: 'E2', label: 'Error · Scan a location first', group: 'Alerts' },
+  { id: 'err-no-location', code: 'E2', label: 'Error · Finish before scanning a location', group: 'Alerts' },
   { id: 'warn-duplicate', code: 'E3', label: 'Warning · Bag already scanned', group: 'Alerts' },
   { id: 'err-empty-location', code: 'E4', label: 'Error · Location open and empty', group: 'Alerts' },
   { id: 'err-finish-empty', code: 'E5', label: 'Error · A location has no bags', group: 'Alerts' },
@@ -287,6 +311,7 @@ export function codeFor(s: State): string {
   if (s.screen === 'summary') return 'D1';
   if (s.extras) return s.extras === 'select' ? 'F1' : s.extras === 'delete' ? 'F2' : 'F3';
   const sel = s.locations.find((l) => l.code === s.selected);
+  if (sel?.code === PENDING) return 'C7';
   const bags = totalBags(s.locations);
   if (s.locations.length <= 1) return bags === 0 ? 'C1' : bags === 1 ? 'C2' : 'C3';
   if (sel && sel.bags.length === 0) return 'C4';
@@ -315,6 +340,8 @@ function applyPreset(prev: State, preset: PresetId): State {
       return { ...base, screen: 'instructions', helpOpen: true };
     case 'bag-required':
       return scan([{ code: A, bags: [] }], A, null);
+    case 'bag-first':
+      return scan([{ code: PENDING, bags: ['5466'] }], PENDING, '5466');
     case 'one-bag':
       return scan([{ code: A, bags: ['5466'] }], A, '5466');
     case 'two-bags':
@@ -359,7 +386,7 @@ function applyPreset(prev: State, preset: PresetId): State {
     case 'err-wrong-bag':
       return raise(scan([{ code: A, bags: [] }], A, null), 'wrong');
     case 'err-no-location':
-      return raise({ ...base, screen: 'instructions' }, 'noLocation');
+      return raise(scan([{ code: PENDING, bags: ['5466'] }], PENDING, '5466'), 'noLocation');
     case 'warn-duplicate':
       return raise(scan([{ code: A, bags: ['5466'] }], A, '5466'), 'duplicate');
   }

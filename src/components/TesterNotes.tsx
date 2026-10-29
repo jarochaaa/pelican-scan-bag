@@ -8,8 +8,8 @@ const EDGE_CASES: { title: string; steps: string[] }[] = [
     steps: ['The simulated scanner always scans a valid bag, so these cannot be triggered by tapping.', 'Jump to E1 (wrong bag: it belongs to another order) or E3 (bag already scanned) in the left panel.'],
   },
   {
-    title: 'Scan a bag before a location',
-    steps: ['Go to Instructions (B1).', 'Tap “Scan Bag” first. The alert “Scan a location first” appears (E2).', 'Tap “Scan Location” to continue normally.'],
+    title: 'Finish before scanning a location',
+    steps: ['On Instructions (B1) tap “Scan Bag” first: a yellow location with the bag and no shelf opens (C7).', 'Tap “Finish”. The alert “Scan a location first” appears (E2).', 'Tap “Scan Location”: the shelf is assigned to those bags and the location turns selected (green).'],
   },
   {
     title: 'Empty location blocks the flow',
@@ -45,9 +45,8 @@ export function TesterNotes({ s, code }: { s: State; code: string }) {
       break;
     case 'B1':
       title = 'Instructions';
-      lines.push('Illustration, the 3 steps and a warning about what to do when a shelf is full.');
-      lines.push('“Scan Location” opens the scanning screen with the first shelf (C1).');
-      lines.push('“Scan Bag” here shows the alert “Scan a location first” (E2).');
+      lines.push('Illustration, one instruction (“Scan a shelf or bags to start”) and a warning about what to do when a shelf is full.');
+      lines.push('The picker can start either way: “Scan Location” opens the first shelf (C1); “Scan Bag” opens a location without shelf holding that bag (C7).');
       break;
     case 'B2':
       title = 'Help';
@@ -59,6 +58,12 @@ export function TesterNotes({ s, code }: { s: State; code: string }) {
       lines.push('The selected location is open with 0 bags and the message “Scan bags to add in this location”.');
       lines.push(`“Scan Bag” adds the next bag of the order (${bagsOrder}). Finish stays disabled until there is one.`);
       lines.push('“Delete location” removes the empty location.');
+      break;
+    case 'C7':
+      title = 'Bag scanned first · no location yet';
+      lines.push('Yellow frame: the bags are waiting for a shelf. Location shows “-”.');
+      lines.push('“Scan Bag” keeps adding bags to it. “Scan Location” assigns the shelf and the location turns selected (green, C2/C3).');
+      lines.push('“Finish” now shows “Scan a location first” (E2).');
       break;
     case 'C2':
     case 'C3':
@@ -108,8 +113,8 @@ export function TesterNotes({ s, code }: { s: State; code: string }) {
       break;
     case 'E2':
       title = 'Alert · Scan a location first';
-      lines.push('A bag was scanned before any location.');
-      lines.push('Tap “Scan Location” and continue.');
+      lines.push('Finish was tapped while bags were still waiting for a shelf (C7).');
+      lines.push('Tap “Scan Location” to assign the shelf and continue.');
       break;
     case 'E3':
       title = 'Warning · Bag already scanned';
@@ -133,7 +138,7 @@ export function TesterNotes({ s, code }: { s: State; code: string }) {
       lines.push('Unknown alert.');
   }
 
-  const openEdge = ['B1', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6'].includes(code);
+  const openEdge = ['B1', 'C7', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6'].includes(code);
 
   return (
     <aside className="tester-notes" aria-label="Facilitator hints">

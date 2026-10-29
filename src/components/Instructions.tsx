@@ -32,23 +32,8 @@ export function InstructionsCard() {
         <h2 id="instructions-title" className="instructions__title">{t('instructions')}</h2>
         <Divider />
         <div className="stepper">
-          <img src={assets.inbox} alt="" />
-          <span className="stepper__num">1.</span>
-          <p className="stepper__text">
-            {t('step1')}
-            <br />
-            <span className="stepper__sub">{t('step1Sub')}</span>
-          </p>
-        </div>
-        <div className="stepper">
           <img src={assets.maximize} alt="" />
-          <span className="stepper__num">2</span>
-          <p className="stepper__text">{t('step2')}</p>
-        </div>
-        <div className="stepper">
-          <img src={assets.bagStep} alt="" />
-          <span className="stepper__num">3</span>
-          <p className="stepper__text">{t('step3')}</p>
+          <p className="stepper__text">{t('scanToStart')}</p>
         </div>
         <Alert variant="warning" title={t('noSpaceTitle')}>
           {t('noSpaceBody')}

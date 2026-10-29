@@ -28,7 +28,7 @@ export function SwipeToDelete({
   onDelete: () => void;
   label: string;
   /** keep the green "selected" border fixed on the wrapper while the content slides inside it */
-  framed?: boolean;
+  framed?: 'success' | 'warning';
 }) {
   const { rtl } = useI18n();
   /** physical direction of the swipe: left in LTR, right in RTL (logical x stays negative while open) */
@@ -95,7 +95,7 @@ export function SwipeToDelete({
   const open = x < 0;
 
   return (
-    <div className={cx('loc-swipe', framed && 'loc-swipe--framed', open && 'loc-swipe--open')} ref={wrapRef}>
+    <div className={cx('loc-swipe', framed && 'loc-swipe--framed', framed === 'warning' && 'loc-swipe--warning', open && 'loc-swipe--open')} ref={wrapRef}>
       <button
         type="button"
         className="loc-swipe__action"
