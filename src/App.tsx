@@ -29,7 +29,7 @@ const USE_CASES: { title: string; hint: string; steps: PresetId[] }[] = [
 /** Edge cases: same shape; the “Edge cases” recipes in the facilitator hints follow the same numbering. */
 const EDGE_CASES: { title: string; hint: string; steps: PresetId[] }[] = [
   { title: 'EDGE CASE 1 · Wrong or duplicate bag', hint: 'Cannot be triggered by tapping', steps: ['err-wrong-bag', 'warn-duplicate'] },
-  { title: 'EDGE CASE 2 · Finish before scanning a location', hint: 'Scan Bag → Finish', steps: ['bag-first', 'err-no-location'] },
+  { title: 'EDGE CASE 2 · Finish before scanning a location', hint: 'Finish disabled in C7 · E2 from the panel', steps: ['bag-first', 'err-no-location'] },
   { title: 'EDGE CASE 3 · Empty location blocks the flow', hint: 'Scan Location twice · Finish', steps: ['second-location', 'err-empty-location', 'err-finish-empty'] },
   { title: 'EDGE CASE 4 · Delete a bag or a location', hint: 'Bin icon · Delete location · slide', steps: ['bag-required', 'two-bags'] },
   { title: 'EDGE CASE 5 · No more shelves', hint: 'More than 4 locations', steps: ['err-no-shelves'] },

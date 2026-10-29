@@ -9,7 +9,7 @@ const EDGE_CASES: { title: string; steps: string[] }[] = [
   },
   {
     title: 'Finish before scanning a location',
-    steps: ['On Instructions (B1) tap “Scan Bag” first: a yellow location with the bag and no shelf opens (C7).', 'Tap “Finish”. The alert “Scan a location first” appears (E2).', 'Tap “Scan Location”: the shelf is assigned to those bags and the location turns selected (green).'],
+    steps: ['On Instructions (B1) tap “Scan Bag” first: a yellow location with the bag and no shelf opens (C7). Finish stays disabled.', 'The alert “Scan a location first” (E2) can only be opened from the left panel now.', 'Tap “Scan Location”: the shelf is assigned to those bags and the location turns selected (green).'],
   },
   {
     title: 'Empty location blocks the flow',
@@ -63,7 +63,7 @@ export function TesterNotes({ s, code }: { s: State; code: string }) {
       title = 'Bag scanned first · no location yet';
       lines.push('Yellow frame: the bags are waiting for a shelf. Location shows “-”.');
       lines.push('“Scan Bag” keeps adding bags to it. “Scan Location” assigns the shelf and the location turns selected (green, C2/C3).');
-      lines.push('“Finish” now shows “Scan a location first” (E2).');
+      lines.push('Finish is disabled until a location is scanned.');
       break;
     case 'C2':
     case 'C3':
@@ -138,7 +138,7 @@ export function TesterNotes({ s, code }: { s: State; code: string }) {
       break;
     case 'E2':
       title = 'Alert · Scan a location first';
-      lines.push('Finish was tapped while bags were still waiting for a shelf (C7).');
+      lines.push('Shown if Finish is reached while bags are still waiting for a shelf. Finish is disabled in C7, so open it from the left panel.');
       lines.push('Tap “Scan Location” to assign the shelf and continue.');
       break;
     case 'E3':

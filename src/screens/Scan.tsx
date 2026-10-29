@@ -4,7 +4,7 @@ import { PageHeader } from '../components/PageHeader';
 import { ScannerFabs } from '../components/Scanner';
 import { Button, Indicator } from '../components/ui';
 import { useI18n } from '../i18n';
-import { totalBags } from '../state';
+import { PENDING, totalBags } from '../state';
 
 interface Props {
   locations: Loc[];
@@ -24,7 +24,8 @@ interface Props {
 /** Scanning process: locations list, one selected at a time; bags are added to the selected location. */
 export function ScanScreen(p: Props) {
   const { t } = useI18n();
-  const canFinish = totalBags(p.locations) > 0;
+  // bags still waiting for a shelf (C7) can't be finished
+  const canFinish = totalBags(p.locations) > 0 && !p.locations.some((l) => l.code === PENDING);
 
   return (
     <div className="screen screen-enter">
@@ -48,6 +49,7 @@ export function ScanScreen(p: Props) {
                   onRemoveLocation={() => p.onRemoveLocation(loc.code)}
                 />
               ))}
+              <p className="scan-cta scan-cta--list">{t('scanAnotherLocation')}</p>
             </div>
           </section>
         </div>

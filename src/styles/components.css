@@ -647,6 +647,9 @@
   height: 24px;
 }
 
+.locations .scan-cta--list {
+  margin: 0;
+}
 .scan-cta {
   /* dashed "Scan bags" placeholder (Figma 46771:7400), the same in every state */
   display: flex;
