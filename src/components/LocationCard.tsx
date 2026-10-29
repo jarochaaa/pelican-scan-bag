@@ -100,7 +100,7 @@ export function LocationCard({ loc, variant, onSelect, onRemoveBag, onRemoveLoca
       {active && (
         <p className={cx('scan-cta', pending && 'scan-cta--pending')}>
           {!pending && <img src={assets.bagCta} alt="" />}
-          {t('scanHint')}
+          {t(pending ? 'pendingHint' : 'scanHint')}
         </p>
       )}
       {active && loc.bags.length === 0 && (
