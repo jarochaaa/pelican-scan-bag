@@ -648,27 +648,19 @@
 }
 
 .scan-cta {
+  /* dashed "Scan bags" placeholder (Figma 46771:7400), the same in every state */
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--cp-spacing-small);
-  width: 100%;
   height: 64px;
-  padding: var(--cp-spacing-small) var(--cp-spacing-large);
-  font: var(--text-mobile-subtitle-small);
-  color: var(--cp-chart-color-success-medium);
-}
-.scan-cta--pending {
-  width: auto;
   margin: 0 var(--cp-spacing-small);
+  padding: var(--cp-spacing-small) var(--cp-spacing-large);
   border: 1px dashed var(--cp-border-color-normal);
   border-radius: var(--cp-radius-xlarge);
+  font: var(--text-mobile-subtitle-small);
   font-style: italic;
   color: var(--cp-text-color-warning);
-}
-.scan-cta img {
-  width: 24px;
-  height: 24px;
+  text-align: center;
 }
 
 .delete-loc {

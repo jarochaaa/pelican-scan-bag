@@ -98,10 +98,7 @@ export function LocationCard({ loc, variant, onSelect, onRemoveBag, onRemoveLoca
       {stats}
       {bagList}
       {active && (
-        <p className={cx('scan-cta', pending && 'scan-cta--pending')}>
-          {!pending && <img src={assets.bagCta} alt="" />}
-          {t(pending ? 'pendingHint' : 'scanHint')}
-        </p>
+        <p className="scan-cta">{t(pending ? 'pendingHint' : 'scanHint')}</p>
       )}
       {active && loc.bags.length === 0 && (
         <button type="button" className="delete-loc" onClick={onRemoveLocation}>
