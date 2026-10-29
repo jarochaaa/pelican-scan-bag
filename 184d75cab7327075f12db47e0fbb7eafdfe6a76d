@@ -1,0 +1,65 @@
+src/styles/components.css
+  s_d4c0229a7eeaf5::t_85d203cb86d602 52,226,581-582,807-810,815-816,820-822,826-830,833-835,837-856,859-860,863,868-937,939-1007,1009-1124,1128
+  s_d4c0229a7eeaf5::t_83a37d88a6732e 467,510,584,605,636
+src/components/SwipeToDelete.tsx
+  s_d4c0229a7eeaf5::t_8a9cf92b3b1225 3,33-35,55,112
+src/components/Scanner.tsx
+  s_d4c0229a7eeaf5::t_28218caa39a7af 1,6,11,15
+src/App.tsx
+  s_d4c0229a7eeaf5::t_216be24d6fd8da 1
+  s_d4c0229a7eeaf5::t_c1c520f88068e3 3,5,10-34,38-40,59-76,78-97,99-109,111-119,121,123-140,142-143,145-212,214
+src/screens/Checkout.tsx
+  s_d4c0229a7eeaf5::t_b0577cdb28c744 5,30,37-38,40,43,47,66
+src/screens/Summary.tsx
+  s_d4c0229a7eeaf5::t_fee61b86ba96b8 1,10,21-22,28-30,40,42-44,49-50,54,60,63-64,69,78
+src/components/TesterNotes.tsx
+  s_d4c0229a7eeaf5::t_57ad136076f10b 1-164
+src/tasks.ts
+  s_d4c0229a7eeaf5::t_b1a49b1229ff77 14-19
+src/screens/Instructions.tsx
+  s_d4c0229a7eeaf5::t_28218caa39a7af 1,18,22,24,34,38,40
+src/screens/Scan.tsx
+  s_d4c0229a7eeaf5::t_fee61b86ba96b8 6,26,32,34,37,56
+src/components/Instructions.tsx
+  s_d4c0229a7eeaf5::t_28218caa39a7af 6,11,13-14,27,32,38,40,46,51,53-54
+src/components/PageHeader.tsx
+  s_d4c0229a7eeaf5::t_b0577cdb28c744 1,17,22-23,29-30
+src/components/LocationCard.tsx
+  s_d4c0229a7eeaf5::t_fee61b86ba96b8 1,8,12,15,18,35,43,47,52,76,85,94,100,105,114
+src/components/icons.tsx
+  s_d4c0229a7eeaf5::t_fee61b86ba96b8 41
+src/styles/base.css
+  s_d4c0229a7eeaf5::t_85d203cb86d602 67
+  s_d4c0229a7eeaf5::t_83a37d88a6732e 48,60,82-202
+  s_d4c0229a7eeaf5::t_d1c4258e0e3d0f 203
+index.html
+  s_d4c0229a7eeaf5::t_83a37d88a6732e 17
+src/i18n.tsx
+  s_d4c0229a7eeaf5::t_b0577cdb28c744 27-28,97-98,162-163
+  s_d4c0229a7eeaf5::t_38a79117881452 1-26,29-96,99-161,164-237
+tsconfig.tsbuildinfo
+  s_d4c0229a7eeaf5::t_319891d796a41d 1
+src/state.ts
+  s_d4c0229a7eeaf5::t_319891d796a41d 219-220
+  s_d4c0229a7eeaf5::t_0694a4b4e26efc 1-2,11-23,26,37-38,40-41,62,78-79,84,86,88,95,117,120,123,133,163,167-168,174,199,206,211,224-229,246-248,250-272,275-296,337-356,360,362,364
+src/styles/tokens.css
+  s_d4c0229a7eeaf5::t_83a37d88a6732e 8-14,72
+README.md
+  s_d4c0229a7eeaf5::t_c39738b59fae1f 14-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "184d75cab7327075f12db47e0fbb7eafdfe6a76d",
+  "prompts": {},
+  "sessions": {
+    "s_d4c0229a7eeaf5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7e7c5d6f-5adf-44e8-827c-6a250363316a",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Javier Arocha <arocha.grafico@gmail.com>"
+    }
+  }
+}
