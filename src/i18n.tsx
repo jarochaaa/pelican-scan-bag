@@ -24,7 +24,7 @@ const en = {
   // instructions
   instructions: 'Instructions',
   illustrationAlt: 'A hand holding a phone and scanning',
-  scanToStart: 'Scan a shelf or bags to start',
+  scanToStart: 'Scan a location or bag QR code to start',
   noSpaceTitle: 'No more space in the same location?',
   noSpaceBody: 'Scan the new location, gather any leftover bags, scan them and place them',
   // scanning
@@ -93,7 +93,7 @@ const es: Dict = {
   nothingToPick: 'Nada por recoger',
   instructions: 'Instrucciones',
   illustrationAlt: 'Una mano sosteniendo un teléfono y escaneando',
-  scanToStart: 'Escanea un estante o bolsas para empezar',
+  scanToStart: 'Escanea el código QR de una ubicación o bolsa para empezar',
   noSpaceTitle: '¿No hay más espacio en la misma ubicación?',
   noSpaceBody: 'Escanea la nueva ubicación, reúne las bolsas restantes, escanéalas y colócalas',
   locations: 'Ubicaciones',
@@ -157,7 +157,7 @@ const ar: Dict = {
   nothingToPick: 'لا شيء للتجهيز',
   instructions: 'التعليمات',
   illustrationAlt: 'يد تمسك هاتفًا وتقوم بالمسح',
-  scanToStart: 'امسح رفًا أو أكياسًا للبدء',
+  scanToStart: 'امسح رمز QR لموقع أو كيس للبدء',
   noSpaceTitle: 'لا توجد مساحة أخرى في نفس الموقع؟',
   noSpaceBody: 'امسح الموقع الجديد، واجمع الأكياس المتبقية، وامسحها وضعها',
   locations: 'المواقع',

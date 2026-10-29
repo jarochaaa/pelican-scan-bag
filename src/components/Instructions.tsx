@@ -1,7 +1,6 @@
 import hand from '../assets/illustration/hand.svg';
-import mobile from '../assets/illustration/mobile.svg';
+import mobile from '../assets/illustration/mobile-qr.svg';
 import group from '../assets/illustration/group.svg';
-import vector from '../assets/illustration/vector.svg';
 import { assets } from './icons';
 import { useI18n } from '../i18n';
 import { Alert, Divider } from './ui';
@@ -15,9 +14,6 @@ function Illustration() {
         <div className="illustration__layer illustration__layer--hand"><img src={hand} alt="" /></div>
         <div className="illustration__layer illustration__layer--mobile"><img src={mobile} alt="" /></div>
         <div className="illustration__layer illustration__layer--group"><img src={group} alt="" /></div>
-        <div className="illustration__layer illustration__layer--vector">
-          <div><img src={vector} alt="" style={{ position: 'absolute', inset: 0 }} /></div>
-        </div>
       </div>
     </div>
   );

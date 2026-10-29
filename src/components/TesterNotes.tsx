@@ -45,7 +45,7 @@ export function TesterNotes({ s, code }: { s: State; code: string }) {
       break;
     case 'B1':
       title = 'Instructions';
-      lines.push('Illustration, one instruction (“Scan a shelf or bags to start”) and a warning about what to do when a shelf is full.');
+      lines.push('Illustration, one instruction (“Scan a location or bag QR code to start”) and a warning about what to do when a shelf is full.');
       lines.push('The picker can start either way: “Scan Location” opens the first shelf (C1); “Scan Bag” opens a location without shelf holding that bag (C7).');
       break;
     case 'B2':
