@@ -37,7 +37,7 @@ const en = {
   scanBag: 'Scan Bag',
   scanHint: 'Scan bags to add in this location',
   pendingTag: 'Please, scan a location in order to place these bags',
-  pendingHint: 'Scan Bags to add',
+  pendingHint: 'Scan bags to add',
   deleteLocation: 'Delete location',
   finish: 'Finish',
   removeBag: 'Remove bag {code}',
