@@ -24,8 +24,9 @@ interface Props {
 /** Scanning process: locations list, one selected at a time; bags are added to the selected location. */
 export function ScanScreen(p: Props) {
   const { t } = useI18n();
-  // bags still waiting for a shelf (C7) can't be finished
-  const canFinish = totalBags(p.locations) > 0 && !p.locations.some((l) => l.code === PENDING);
+  // bags still waiting for a shelf (C7): Finish disabled and no "scan another location" placeholder
+  const pending = p.locations.some((l) => l.code === PENDING);
+  const canFinish = totalBags(p.locations) > 0 && !pending;
 
   return (
     <div className="screen screen-enter">
@@ -49,7 +50,7 @@ export function ScanScreen(p: Props) {
                   onRemoveLocation={() => p.onRemoveLocation(loc.code)}
                 />
               ))}
-              <p className="scan-cta scan-cta--list">{t('scanAnotherLocation')}</p>
+              {!pending && <p className="scan-cta scan-cta--list">{t('scanAnotherLocation')}</p>}
             </div>
           </section>
         </div>
