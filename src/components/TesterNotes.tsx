@@ -106,6 +106,31 @@ export function TesterNotes({ s, code }: { s: State; code: string }) {
       title = 'End of the test';
       lines.push('Nothing else to do. Finish and Done restart the prototype.');
       break;
+    case 'G1':
+      title = 'Current version · Scan Location';
+      lines.push('Today’s flow, opened over Confirm Order Dispatch after “Continue checkout”.');
+      lines.push('Tap the orange scan button: it simulates a successful location scan and fills “Location Number” (G2).');
+      lines.push('Close goes to Confirm Order Dispatch without adding anything.');
+      break;
+    case 'G2':
+      title = 'Current version · Location scanned';
+      lines.push('Add opens Number of Bags (G3) for that location.');
+      break;
+    case 'G3':
+      title = 'Current version · Number of Bags';
+      lines.push('Set how many bags go on that location with − / +, then Add.');
+      lines.push('The location and its bag count land on Confirm Order Dispatch (G4).');
+      break;
+    case 'G4':
+      title = 'Current version · Confirm Order Dispatch';
+      lines.push('Total Number of Bags adds up every dispatch location.');
+      lines.push('The green + repeats Scan Location → Number of Bags for another location.');
+      lines.push('Confirm Dispatch restarts the prototype.');
+      break;
+    case 'G5':
+      title = 'Current version · no dispatch location';
+      lines.push('The Scan Location sheet was closed without adding a location. Confirm Dispatch is disabled; tap the green + to add one.');
+      break;
     case 'E1':
       title = 'Alert · Wrong bag';
       lines.push('The scanned bag belongs to another order. The alert closes by itself or when tapped.');
@@ -149,6 +174,7 @@ export function TesterNotes({ s, code }: { s: State; code: string }) {
           <li key={i}>{l}</li>
         ))}
       </ul>
+      {s.version === 'new' && (
       <details className="edge" open={openEdge}>
         <summary>Edge cases · how to recreate them</summary>
         {EDGE_CASES.map((e, i) => (
@@ -164,6 +190,7 @@ export function TesterNotes({ s, code }: { s: State; code: string }) {
           </div>
         ))}
       </details>
+      )}
     </aside>
   );
 }

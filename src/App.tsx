@@ -4,11 +4,12 @@ import { TesterNotes } from './components/TesterNotes';
 import { Alert } from './components/ui';
 import { I18nProvider, LANGS, makeI18n } from './i18n';
 import { Checkout } from './screens/Checkout';
+import { DispatchScreen } from './screens/Dispatch';
 import { HelpScreen, InstructionsScreen } from './screens/Instructions';
 import { ScanScreen } from './screens/Scan';
 import { SummaryScreen } from './screens/Summary';
 import { ALERT_KIND, PRESETS, codeFor, initialState, reducer } from './state';
-import type { PresetId } from './state';
+import type { PresetId, State } from './state';
 import { SHOW_TASK_BANNER, taskFor } from './tasks';
 
 const FLOW = 'Scan Bag V1 · Pack, Scan & Dispatch';
@@ -35,7 +36,11 @@ const EDGE_CASES: { title: string; hint: string; steps: PresetId[] }[] = [
 ];
 
 export default function App() {
-  const [s, dispatch] = useReducer(reducer, initialState);
+  // ?version=current opens today's flow (lets testers on a phone see it without the desktop switch)
+  const [s, dispatch] = useReducer(reducer, initialState, (init): State => ({
+    ...init,
+    version: new URLSearchParams(window.location.search).get('version') === 'current' ? 'current' : 'new',
+  }));
   const [navOpen, setNavOpen] = useState(true);
   const [open, setOpen] = useState({ uc: true, ec: true, pl: true });
   const code = codeFor(s);
@@ -58,6 +63,9 @@ export default function App() {
   const info = () => {}; // Order info is not part of the Scan Bag frames yet.
 
   const i18n = makeI18n(s.lang);
+  const isCurrent = s.version === 'current';
+  // each version lists its own presets (the checkout view is shared)
+  const presets = PRESETS.filter((p) => (isCurrent ? p.group === 'Current version' || p.id === 'checkout' : p.group !== 'Current version'));
   const row = (id: PresetId) => {
     const p = PRESETS.find((x) => x.id === id)!;
     return (
@@ -85,8 +93,8 @@ export default function App() {
           </button>
           {navOpen && (
             <>
-              {group('uc', 'Use cases', USE_CASES.length)}
-              {open.uc &&
+              {!isCurrent && group('uc', 'Use cases', USE_CASES.length)}
+              {!isCurrent && open.uc &&
                 USE_CASES.map((u) => (
                   <div key={u.title} style={{ display: 'contents' }}>
                     <div className="proto-nav__uc">
@@ -97,8 +105,8 @@ export default function App() {
                   </div>
                 ))}
 
-              {group('ec', 'Edge cases', EDGE_CASES.length)}
-              {open.ec &&
+              {!isCurrent && group('ec', 'Edge cases', EDGE_CASES.length)}
+              {!isCurrent && open.ec &&
                 EDGE_CASES.map((u) => (
                   <div key={u.title} style={{ display: 'contents' }}>
                     <div className="proto-nav__uc">
@@ -109,11 +117,11 @@ export default function App() {
                   </div>
                 ))}
 
-              {group('pl', 'Pelican', PRESETS.length)}
+              {group('pl', isCurrent ? 'Pelican · current version' : 'Pelican', presets.length)}
               {open.pl &&
-                PRESETS.map((p, i) => (
+                presets.map((p, i) => (
                   <div key={p.id} style={{ display: 'contents' }}>
-                    {(i === 0 || PRESETS[i - 1].group !== p.group) && <div className="proto-nav__sub">{p.group}</div>}
+                    {(i === 0 || presets[i - 1].group !== p.group) && <div className="proto-nav__sub">{p.group}</div>}
                     {row(p.id)}
                   </div>
                 ))}
@@ -131,6 +139,9 @@ export default function App() {
                   User: <b>Pickers</b>
                 </span>
                 <span className="board__tag">{AREA}</span>
+                <span className="board__tag board__tag--version">
+                  Version <b>{isCurrent ? 'Current' : 'New proposal'}</b>
+                </span>
                 <span className="board__tag board__tag--view">
                   View <b>{code}</b>
                 </span>
@@ -144,7 +155,7 @@ export default function App() {
                   {s.helpOpen && <HelpScreen onClose={() => dispatch({ type: 'help', open: false })} />}
 
                   {!s.helpOpen && s.screen === 'checkout' && (
-                    <Checkout onBack={() => {}} onContinue={() => dispatch({ type: 'go', screen: 'instructions' })} />
+                    <Checkout onBack={() => {}} onContinue={() => dispatch({ type: 'continueCheckout' })} />
                   )}
 
                   {!s.helpOpen && s.screen === 'instructions' && (
@@ -167,6 +178,8 @@ export default function App() {
                       onFinish={() => dispatch({ type: 'finish' })}
                     />
                   )}
+
+                  {!s.helpOpen && s.screen === 'dispatch' && <DispatchScreen c={s.current} dispatch={dispatch} />}
 
                   {!s.helpOpen && s.screen === 'summary' && <SummaryScreen locations={s.locations} onDone={() => dispatch({ type: 'done' })} />}
 
@@ -191,8 +204,13 @@ export default function App() {
               </div>
 
               <div className="side">
-                <div className="view-tag" aria-hidden>
-                  View <b>{code}</b>
+                <div className="side__top">
+                  <div className="view-tag" aria-hidden>
+                    View <b>{code}</b>
+                  </div>
+                  <button type="button" className="version-switch" onClick={() => dispatch({ type: 'setVersion', version: isCurrent ? 'new' : 'current' })}>
+                    Switch Version
+                  </button>
                 </div>
 
                 <div className="lang-switch" role="group" aria-label="App language">

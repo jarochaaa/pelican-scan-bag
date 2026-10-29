@@ -89,6 +89,9 @@ export function taskFor(s: State): Task {
       return T.instructions;
     case 'summary':
       return T.summary;
+    case 'dispatch':
+      // today's flow (version switch): no test tasks written for it
+      return { detail: 'Task detail', description: 'Task short description' };
     case 'scan': {
       const bags = totalBags(s.locations);
       if (bags >= ORDER_BAGS.length) return T.finish;

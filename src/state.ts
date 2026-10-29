@@ -1,6 +1,21 @@
 import type { Lang } from './i18n';
 
-export type ScreenId = 'checkout' | 'instructions' | 'scan' | 'summary';
+export type ScreenId = 'checkout' | 'instructions' | 'scan' | 'summary' | 'dispatch';
+
+/** Which Pelican proposal is shown: the new Scan Bag flow, or today's flow (Scan Location → Number of Bags → Confirm Order Dispatch). */
+export type Version = 'new' | 'current';
+
+/** Today's flow: dispatch locations with a bag count each, plus the sheet that is open. */
+export interface CurrentFlow {
+  sheet: 'location' | 'bags' | null;
+  /** location scanned in the Scan Location sheet, not added yet */
+  scanned: string | null;
+  /** value of the Number of Bags stepper */
+  count: number;
+  dispatch: { code: string; bags: number }[];
+}
+
+const emptyCurrent: CurrentFlow = { sheet: null, scanned: null, count: 1, dispatch: [] };
 
 export interface Loc {
   code: string;
@@ -38,9 +53,11 @@ export interface State {
   lang: Lang;
   helpOpen: boolean;
   /** transient message after Done (i18n key) */
-  snack: 'sent' | null;
+  snack: 'sent' | 'dispatched' | null;
   /** follow-up test tasks that run after step 8 (summary → Done): select another location → delete a location → end */
   extras: 'select' | 'delete' | 'end' | null;
+  version: Version;
+  current: CurrentFlow;
 }
 
 export const ORDER_ID = '#123';
@@ -66,10 +83,21 @@ export const initialState: State = {
   helpOpen: false,
   snack: null,
   extras: null,
+  version: 'new',
+  current: emptyCurrent,
 };
 
 export type Action =
   | { type: 'go'; screen: ScreenId }
+  | { type: 'setVersion'; version: Version }
+  | { type: 'continueCheckout' }
+  | { type: 'curScan' }
+  | { type: 'curAddLocation' }
+  | { type: 'curCount'; delta: number }
+  | { type: 'curAddBags' }
+  | { type: 'curClose' }
+  | { type: 'curPlus' }
+  | { type: 'curConfirm' }
   | { type: 'scan'; code: string }
   | { type: 'selectLocation'; code: string }
   | { type: 'removeBag'; code: string }
@@ -78,7 +106,7 @@ export type Action =
   | { type: 'scanBag' }
   | { type: 'help'; open: boolean }
   | { type: 'dismissAlert' }
-  | { type: 'snack'; message: 'sent' | null }
+  | { type: 'snack'; message: 'sent' | 'dispatched' | null }
   | { type: 'setLang'; lang: Lang }
   | { type: 'jump'; preset: PresetId }
   | { type: 'done' }
@@ -97,6 +125,35 @@ export function totalBags(locations: Loc[]) {
 
 function baseReducer(state: State, action: Action): State {
   switch (action.type) {
+    case 'setVersion':
+      return { ...initialState, alertSeq: state.alertSeq, version: action.version };
+    case 'continueCheckout':
+      // New proposal → Instructions. Current flow → Confirm Order Dispatch with the Scan Location sheet open.
+      return state.version === 'current'
+        ? { ...state, screen: 'dispatch', current: { ...emptyCurrent, sheet: 'location' } }
+        : { ...state, screen: 'instructions' };
+    case 'curScan': {
+      // Simulated successful scan of the next free shelf.
+      const used = new Set(state.current.dispatch.map((d) => d.code));
+      const next = SCAN_LOCATIONS.find((c) => !used.has(c)) ?? SCAN_LOCATIONS[0];
+      return { ...state, current: { ...state.current, scanned: next } };
+    }
+    case 'curAddLocation':
+      return state.current.scanned ? { ...state, current: { ...state.current, sheet: 'bags', count: 1 } } : state;
+    case 'curCount':
+      return { ...state, current: { ...state.current, count: Math.max(1, state.current.count + action.delta) } };
+    case 'curAddBags': {
+      const c = state.current;
+      if (!c.scanned) return state;
+      return { ...state, current: { ...c, sheet: null, scanned: null, count: 1, dispatch: [...c.dispatch, { code: c.scanned, bags: c.count }] } };
+    }
+    case 'curClose':
+      return { ...state, current: { ...state.current, sheet: null, scanned: null, count: 1 } };
+    case 'curPlus':
+      return { ...state, current: { ...state.current, sheet: 'location', scanned: null, count: 1 } };
+    case 'curConfirm':
+      return { ...initialState, alertSeq: state.alertSeq, version: state.version, snack: 'dispatched' };
+
     case 'go':
       return { ...state, screen: action.screen, alert: null };
 
@@ -246,7 +303,10 @@ function baseReducer(state: State, action: Action): State {
 /** Language lives outside the flow: switching it never resets anything, and resets/jumps never change it. */
 export function reducer(state: State, action: Action): State {
   if (action.type === 'setLang') return { ...state, lang: action.lang };
-  return { ...baseReducer(state, action), lang: state.lang };
+  const next = baseReducer(state, action);
+  // the version only changes when switched, or when a preset of the other version is opened
+  const version = action.type === 'jump' || action.type === 'setVersion' ? next.version : state.version;
+  return { ...next, lang: state.lang, version };
 }
 
 /* ---------- Presets: jump straight to any state of the flow (used by the desktop navigator) ---------- */
@@ -271,7 +331,13 @@ export type PresetId =
   | 'err-no-shelves'
   | 'extras-select'
   | 'extras-delete'
-  | 'extras-end';
+  | 'extras-end'
+  | 'cur-scan'
+  | 'cur-scanned'
+  | 'cur-bags'
+  | 'cur-confirm'
+  | 'cur-confirm-empty'
+  | 'cur-add-more';
 
 export const PRESETS: { id: PresetId; code: string; label: string; group: string }[] = [
   { id: 'checkout', code: 'A1', label: 'Checkout done view', group: 'Entry' },
@@ -294,6 +360,12 @@ export const PRESETS: { id: PresetId; code: string; label: string; group: string
   { id: 'extras-select', code: 'F1', label: 'After step 8 · select location', group: 'Follow-up' },
   { id: 'extras-delete', code: 'F2', label: 'After step 8 · delete location', group: 'Follow-up' },
   { id: 'extras-end', code: 'F3', label: 'After step 8 · end of the test', group: 'Follow-up' },
+  { id: 'cur-scan', code: 'G1', label: 'Scan Location sheet', group: 'Current version' },
+  { id: 'cur-scanned', code: 'G2', label: 'Location scanned', group: 'Current version' },
+  { id: 'cur-bags', code: 'G3', label: 'Number of Bags sheet', group: 'Current version' },
+  { id: 'cur-confirm', code: 'G4', label: 'Confirm Order Dispatch', group: 'Current version' },
+  { id: 'cur-add-more', code: 'G4', label: 'Confirm · 2 dispatch locations', group: 'Current version' },
+  { id: 'cur-confirm-empty', code: 'G5', label: 'Confirm · no dispatch location', group: 'Current version' },
 ];
 
 /** Alert key → view code (alerts sit on top of whichever screen is showing). */
@@ -306,6 +378,12 @@ const ALERT_CODE: Record<AlertKey, string> = { wrong: 'E1', noLocation: 'E2', du
 export function codeFor(s: State): string {
   if (s.alert) return ALERT_CODE[s.alert.key];
   if (s.helpOpen) return 'B2';
+  if (s.screen === 'dispatch') {
+    const c = s.current;
+    if (c.sheet === 'location') return c.scanned ? 'G2' : 'G1';
+    if (c.sheet === 'bags') return 'G3';
+    return c.dispatch.length ? 'G4' : 'G5';
+  }
   if (s.screen === 'checkout') return 'A1';
   if (s.screen === 'instructions') return 'B1';
   if (s.screen === 'summary') return 'D1';
@@ -320,6 +398,13 @@ export function codeFor(s: State): string {
 }
 
 function applyPreset(prev: State, preset: PresetId): State {
+  const next = presetState(prev, preset);
+  // checkout is shared by both versions; every other preset belongs to one version
+  const version = preset === 'checkout' ? prev.version : preset.startsWith('cur-') ? 'current' : 'new';
+  return { ...next, version };
+}
+
+function presetState(prev: State, preset: PresetId): State {
   const base: State = { ...initialState, alertSeq: prev.alertSeq };
   const A = '001-38-01A';
   const B = '001-41-01B';
@@ -361,6 +446,18 @@ function applyPreset(prev: State, preset: PresetId): State {
       };
     case 'extras-select':
       return { ...scan([{ code: B, bags: ['9988'] }, { code: A, bags: ['1234', '5466'] }], B, null), extras: 'select' };
+    case 'cur-scan':
+      return { ...base, version: 'current', screen: 'dispatch', current: { ...emptyCurrent, sheet: 'location' } };
+    case 'cur-scanned':
+      return { ...base, version: 'current', screen: 'dispatch', current: { ...emptyCurrent, sheet: 'location', scanned: A } };
+    case 'cur-bags':
+      return { ...base, version: 'current', screen: 'dispatch', current: { ...emptyCurrent, sheet: 'bags', scanned: A, count: 3 } };
+    case 'cur-confirm':
+      return { ...base, version: 'current', screen: 'dispatch', current: { ...emptyCurrent, dispatch: [{ code: A, bags: 3 }] } };
+    case 'cur-add-more':
+      return { ...base, version: 'current', screen: 'dispatch', current: { ...emptyCurrent, dispatch: [{ code: A, bags: 2 }, { code: B, bags: 1 }] } };
+    case 'cur-confirm-empty':
+      return { ...base, version: 'current', screen: 'dispatch', current: emptyCurrent };
     case 'extras-end':
       return { ...scan([{ code: A, bags: ['1234', '5466'] }], A, null), extras: 'end' };
     case 'err-empty-location':
