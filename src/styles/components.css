@@ -1079,14 +1079,15 @@
   }
   .lang-switch__opts {
     display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
+    flex-wrap: nowrap;
+    gap: 2px;
   }
   .lang-switch button {
-    padding: 6px 12px;
+    padding: 6px 8px;
     border-radius: 999px;
     color: var(--text-primary);
-    font: 600 12px/1 var(--font-sans);
+    font: 600 11px/1 var(--font-sans);
+    white-space: nowrap;
   }
   .lang-switch button[aria-pressed='true'] {
     background: var(--accent-cyan);
