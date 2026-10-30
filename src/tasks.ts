@@ -74,7 +74,7 @@ const EXTRAS = {
   },
   end: {
     detail: 'That was the last task. Thank you!',
-    description: 'Tap Finish and then Done to start again.',
+    description: 'Tap Finish and then Ready for Pickup to start again.',
   },
 } satisfies Record<NonNullable<State['extras']>, Task>;
 

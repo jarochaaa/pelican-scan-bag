@@ -1,11 +1,12 @@
 import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
 
-export type Lang = 'en' | 'es' | 'ar';
+export type Lang = 'en' | 'es' | 'ar' | 'el';
 export const LANGS: { id: Lang; label: string }[] = [
   { id: 'en', label: 'English' },
   { id: 'es', label: 'Español' },
   { id: 'ar', label: 'العربية' },
+  { id: 'el', label: 'Ελληνικά' },
 ];
 
 const en = {
@@ -59,7 +60,7 @@ const en = {
   messageRider: 'Message rider',
   callRider: 'Call rider',
   rider: 'Rider',
-  done: 'Done',
+  done: 'Ready for Pickup',
   sent: 'Bag data sent to the Rider App',
   dispatched: 'Order dispatched',
   // current version (today's flow)
@@ -146,7 +147,7 @@ const es: Dict = {
   messageRider: 'Escribir al rider',
   callRider: 'Llamar al rider',
   rider: 'Rider',
-  done: 'Listo',
+  done: 'Listo para recoger',
   sent: 'Datos de las bolsas enviados a la Rider App',
   dispatched: 'Pedido despachado',
   storeName: 'QA_001_Test_Store',
@@ -229,7 +230,7 @@ const ar: Dict = {
   messageRider: 'مراسلة المندوب',
   callRider: 'الاتصال بالمندوب',
   rider: 'المندوب',
-  done: 'تم',
+  done: 'جاهز للاستلام',
   sent: 'تم إرسال بيانات الأكياس إلى تطبيق المندوب',
   dispatched: 'تم تسليم الطلب',
   storeName: 'QA_001_Test_Store',
@@ -265,7 +266,91 @@ const ar: Dict = {
   'alert.unknown.body': 'حاول المسح مرة أخرى',
 };
 
-const DICTS: Record<Lang, Dict> = { en, es, ar };
+
+const el: Dict = {
+  back: 'Πίσω',
+  close: 'Κλείσιμο',
+  help: 'Βοήθεια',
+  orderInfo: 'Στοιχεία παραγγελίας',
+  minutes: '{n} λεπ.',
+  packScan: 'Συσκευασία, σάρωση & αποστολή',
+  toPick: 'Για συλλογή',
+  picked: 'Συλλέχθηκαν',
+  productsTabs: 'Προϊόντα',
+  continueCheckout: 'Συνέχεια checkout',
+  nothingToPick: 'Δεν απομένει τίποτα για συλλογή',
+  instructions: 'Οδηγίες',
+  illustrationAlt: 'Ένα χέρι κρατά τηλέφωνο και σαρώνει',
+  scanToStart: 'Σάρωσε τον κωδικό QR μιας θέσης ή μιας σακούλας για να ξεκινήσεις',
+  noSpaceTitle: 'Δεν υπάρχει άλλος χώρος στην ίδια θέση;',
+  noSpaceBody: 'Σάρωσε τη νέα θέση, μάζεψε τις σακούλες που έμειναν, σάρωσέ τες και τοποθέτησέ τες',
+  locations: 'Θέσεις',
+  selected: 'Επιλεγμένη',
+  location: 'Θέση',
+  bags: 'Σακούλες',
+  bag: 'Σακούλα',
+  scanLocation: 'Σάρωση θέσης',
+  scanBag: 'Σάρωση σακούλας',
+  scanHint: 'Σάρωσε σακούλες για να τις προσθέσεις σε αυτή τη θέση',
+  pendingTag: 'Σάρωσε θέση για αυτές τις σακούλες',
+  pendingHint: 'Σάρωσε σακούλες για προσθήκη',
+  scanAnotherLocation: 'Σάρωσε άλλη θέση για να την προσθέσεις στη λίστα',
+  deleteLocation: 'Διαγραφή θέσης',
+  finish: 'Ολοκλήρωση',
+  removeBag: 'Αφαίρεση σακούλας {code}',
+  deleteLocationAria: 'Διαγραφή θέσης {code}',
+  selectLocationAria: 'Επιλογή θέσης {code}',
+  locationAria: 'Θέση {code}',
+  orderCompleted: 'Η παραγγελία {id} ολοκληρώθηκε',
+  fastestPick: 'Η πιο γρήγορη συλλογή σου σήμερα. Μπράβο!',
+  products: 'Προϊόντα',
+  productStatus: 'Κατάσταση προϊόντων',
+  nPicked: '{n} συλλέχθηκαν',
+  nPartial: '{n} μερικώς',
+  nRemoved: '{n} αφαιρέθηκε',
+  nProducts: '{n} προϊόντα',
+  viewProducts: 'Προβολή προϊόντων',
+  arrivesIn: 'Φτάνει σε {n} λεπ.',
+  messageRider: 'Μήνυμα στον rider',
+  callRider: 'Κλήση στον rider',
+  rider: 'Rider',
+  done: 'Έτοιμη για παραλαβή',
+  sent: 'Τα στοιχεία των σακουλών στάλθηκαν στο Rider App',
+  dispatched: 'Η παραγγελία αποστάλθηκε',
+  storeName: 'QA_001_Test_Store',
+  curScanBanner: 'Σάρωσε μια θέση για να την προσθέσεις σε αυτή την παραγγελία.',
+  curScanEmpty: 'Τοποθέτησε τις σακούλες σε κενή θέση και σάρωσε τη θέση για να την προσθέσεις',
+  locationNumber: 'Αριθμός θέσης',
+  curBagsBanner: 'Πρόσθεσε τον αριθμό σακουλών για αυτή την παραγγελία',
+  curBagsEmpty: 'Πρόσθεσε πόσες σακούλες θα τοποθετήσεις στη θέση αποστολής',
+  add: 'Προσθήκη',
+  scan: 'Σάρωση',
+  fewerBags: 'Λιγότερες σακούλες',
+  moreBags: 'Περισσότερες σακούλες',
+  confirmTitle: 'Επιβεβαίωση\nαποστολής παραγγελίας',
+  orderDetail: 'Στοιχεία παραγγελίας',
+  totalItems: 'Σύνολο ειδών',
+  totalBags: 'Σύνολο σακουλών',
+  dispatchLocation: 'Θέση αποστολής',
+  addDispatchLocation: 'Προσθήκη θέσης αποστολής',
+  confirmDispatch: 'Επιβεβαίωση αποστολής',
+  'alert.wrong.title': 'Λάθος σακούλα',
+  'alert.wrong.body': 'Αυτή η σακούλα ανήκει σε άλλη παραγγελία',
+  'alert.noLocation.title': 'Σάρωσε πρώτα μια θέση',
+  'alert.noLocation.body': 'Σάρωσε το ράφι όπου πάνε αυτές οι σακούλες πριν την ολοκλήρωση',
+  'alert.duplicate.title': 'Η σακούλα έχει ήδη σαρωθεί',
+  'alert.duplicate.body': 'Δοκίμασε να σαρώσεις άλλη σακούλα',
+  'alert.emptyLocation.title': 'Ανοιχτή και κενή θέση',
+  'alert.emptyLocation.body': 'Πρόσθεσε σακούλες ή διάγραψέ την για να σαρώσεις νέα θέση',
+  'alert.noBags.title': 'Μια θέση δεν έχει σακούλες',
+  'alert.noBags.body': 'Σάρωσε σακούλες σε αυτήν ή διάγραψε την κενή θέση για να συνεχίσεις',
+  'alert.noShelves.title': 'Η θέση έχει ήδη σαρωθεί',
+  'alert.noShelves.body': 'Δεν υπάρχουν άλλα ράφια για σάρωση',
+  'alert.unknown.title': 'Μη αναγνωρισμένος κωδικός',
+  'alert.unknown.body': 'Δοκίμασε να σαρώσεις ξανά',
+};
+
+const DICTS: Record<Lang, Dict> = { en, es, ar, el };
 export type Key = keyof Dict;
 
 interface I18n {

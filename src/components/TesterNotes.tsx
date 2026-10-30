@@ -90,7 +90,7 @@ export function TesterNotes({ s, code }: { s: State; code: string }) {
     case 'D1':
       title = 'Summary';
       lines.push('Order completed, counters, product status, rider handoff and one card per location (read only).');
-      lines.push('“Done” sends the data to the Rider App and returns to scanning for the follow-up views (F1 or F2).');
+      lines.push('“Ready for Pickup” sends the data to the Rider App and returns to scanning for the follow-up views (F1 or F2).');
       break;
     case 'F1':
       title = 'After the summary · select a location';
@@ -104,7 +104,7 @@ export function TesterNotes({ s, code }: { s: State; code: string }) {
       break;
     case 'F3':
       title = 'End of the test';
-      lines.push('Nothing else to do. Finish and Done restart the prototype.');
+      lines.push('Nothing else to do. Finish and Ready for Pickup restart the prototype.');
       break;
     case 'G1':
       title = 'Current version · Scan Location';

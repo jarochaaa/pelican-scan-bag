@@ -21,7 +21,7 @@ const USE_CASES: { title: string; hint: string; steps: PresetId[] }[] = [
   { title: 'USE CASE 2 · Start with a bag', hint: 'Scan Bag → Scan Location', steps: ['instructions', 'bag-first', 'one-bag'] },
   { title: 'USE CASE 3 · Scan bags into a location', hint: 'Scan Bag until the shelf is full', steps: ['one-bag', 'two-bags'] },
   { title: 'USE CASE 4 · Spread bags across locations', hint: 'Scan Location → Scan Bag → select another', steps: ['second-location', 'bag-in-new-location', 'reselect-location'] },
-  { title: 'USE CASE 5 · Finish and hand off', hint: 'Finish → Summary → Done', steps: ['summary'] },
+  { title: 'USE CASE 5 · Finish and hand off', hint: 'Finish → Summary → Ready for Pickup', steps: ['summary'] },
   { title: 'USE CASE 6 · Follow-up after the summary', hint: 'Select a location → delete a location', steps: ['extras-select', 'extras-delete', 'extras-end'] },
   { title: 'USE CASE 7 · Find the instructions again', hint: 'Tap ? in the scanning header', steps: ['help'] },
 ];
